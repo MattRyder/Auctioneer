@@ -1,24 +1,28 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}
+body {
+  background-color: #d9d9d9;
+  background-image: url("Images/auctioneer-background.png");
+  background-repeat: repeat;
+  padding-top: 10rem; }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
+.navbar-auctioneer {
+  background-color: rgba(67, 3, 90, 0.8);
+  padding: 10px 0; }
+  .navbar-auctioneer .nav a, .navbar-auctioneer .navbar-brand {
+    color: #FFF; }
+  .navbar-auctioneer .navbar-brand:hover {
+    color: #9757AE; }
+  .navbar-auctioneer .nav > li {
+    margin-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px; }
+    .navbar-auctioneer .nav > li > a {
+      line-height: 5px;
+      border-bottom-style: solid;
+      border-bottom-width: 2px;
+      border-bottom-color: transparent; }
+      .navbar-auctioneer .nav > li > a:hover, .navbar-auctioneer .nav > li > a:focus {
+        background-color: transparent;
+        border-bottom-color: #9757AE;
+        transition: border-bottom-color ease-in-out 0.55s; }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
-}
-
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
+/*# sourceMappingURL=Site.css.map */

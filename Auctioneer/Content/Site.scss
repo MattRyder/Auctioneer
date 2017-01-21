@@ -1,0 +1,49 @@
+body {
+  background-color: #d9d9d9;
+  background-image: url("Images/auctioneer-background.png");
+  background-repeat: repeat;
+
+  padding-top: 10rem;
+}
+
+// Site's main navbar
+.navbar-auctioneer {
+  background-color: rgba(#43035A, 0.8);
+  padding: 10px 0;
+
+  // White links against purple bg
+  .nav a, .navbar-brand {
+    color: #FFF;
+  }
+
+  .navbar-brand {
+    &:hover {
+      color: #9757AE;
+    }
+  }
+
+  // Style the navbar menu items
+  .nav > li {
+    margin-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    & > a {
+      line-height: 5px;
+      border-bottom-style: solid;
+      border-bottom-width: 2px;
+      border-bottom-color: transparent;
+
+
+      &:hover, &:focus {
+        background-color: transparent;
+        border-bottom-color:#9757AE;
+        transition: border-bottom-color ease-in-out 0.55s;
+      }
+    }
+    
+  }
+}
+
+.body-auctioneer {
+}

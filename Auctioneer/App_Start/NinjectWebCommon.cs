@@ -12,6 +12,7 @@ namespace Auctioneer.App_Start
     using Ninject.Web.Common;
     using System.Web.Mvc;
     using Ninject.Web.Mvc;
+    using Infrastructure;
 
     public static class NinjectWebCommon 
     {
@@ -63,7 +64,7 @@ namespace Auctioneer.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            DependencyResolver.SetResolver(new AuctioneerDependencyResolver(kernel));
         }        
     }
 }

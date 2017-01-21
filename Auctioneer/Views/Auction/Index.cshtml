@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Auctioneer.Core.Entities.Auction>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>All Auctions</h2>
+  </div>
+
+  <div class="panel-body">
+
+    <table class="table">
+      <tr>
+        <th>
+          @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Subtitle)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+      </tr>
+
+      @foreach (var item in Model)
+      {
+          <tr>
+            <td>
+              @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Subtitle)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+              @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+              @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+              @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </td>
+          </tr>
+      }
+
+    </table>
+
+  </div>
+
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-12">
+        @Html.ActionLink("Create New Auction", "Create", null, new { @class = "btn btn-default" })
+      </div>
+    </div>
+  </div>
+</div>
