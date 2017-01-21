@@ -81,11 +81,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\EFDbContext.cs" />
+    <Compile Include="Migrations\201701212010055_InitialMigration.cs" />
+    <Compile Include="Migrations\201701212010055_InitialMigration.Designer.cs">
+      <DependentUpon>201701212010055_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Auctioneer.Core\Auctioneer.Core.csproj">
+      <Project>{4E793B80-1111-49F3-926D-5CAB42026057}</Project>
+      <Name>Auctioneer.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201701212010055_InitialMigration.resx">
+      <DependentUpon>201701212010055_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
