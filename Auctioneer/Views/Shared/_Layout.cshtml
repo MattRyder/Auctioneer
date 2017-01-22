@@ -27,13 +27,17 @@
             </div>
         </div>
     </div>
-    <div class="container body-auctioneer">
+    <div class="body-auctioneer">
+      <div class="container">
+
+        @Html.Partial("Alert")
+
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Auctioneer</p>
-        </footer>
+      </div>
     </div>
+    <footer class="footer-auctioneer">
+      <p>&copy; @DateTime.Now.Year - @Html.ActionLink("Auctioneer", "https://github.com/MattRyder/Auctioneer")</p>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

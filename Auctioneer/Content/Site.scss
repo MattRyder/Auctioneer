@@ -4,6 +4,11 @@ body {
   background-repeat: repeat;
 
   padding-top: 10rem;
+
+  // Flexbox sticky footer
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
 // Site's main navbar
@@ -46,4 +51,21 @@ body {
 }
 
 .body-auctioneer {
+  flex: 1;
+}
+
+.footer-auctioneer {
+  text-align: center;
+  background-color: #595959;
+
+  color: #a6a6a6;
+
+  a {
+    color: #CCC;
+    text-decoration: none;
+
+    &:hover {
+      color: #FFF;
+    }
+  }
 }

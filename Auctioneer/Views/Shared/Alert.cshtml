@@ -1,0 +1,13 @@
+﻿@using Auctioneer.Models
+
+@foreach(FlashKeyType key in Enum.GetValues(typeof(FlashKeyType)))
+{
+    string vdKey = $"alert-{key}";
+    if (ViewData[vdKey] != null)
+    {
+        <div class="alert alert-dismissable @vdKey.ToLower()">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          @ViewData[vdKey]
+        </div>
+    }
+}

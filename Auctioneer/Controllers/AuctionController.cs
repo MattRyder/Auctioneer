@@ -1,5 +1,6 @@
 ﻿using Auctioneer.Core.Abstract;
 using Auctioneer.Core.Entities;
+using Auctioneer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Web.Mvc;
 
 namespace Auctioneer.Controllers
 {
-    public class AuctionController : Controller
+    public class AuctionController : BaseController
     {
         private IRepo<Auction> repo;
 
@@ -39,14 +40,18 @@ namespace Auctioneer.Controllers
             return View(new Auction());
         }
 
+        [HttpPost]
         public ActionResult Create(Auction auction)
         {
             if (ModelState.IsValid)
             {
                 repo.Add(auction);
                 repo.SaveChanges();
+
+                SetFlashMessage(FlashKeyType.Success, "Successfully listed your item for auction!");
             }
 
+            SetFlashMessage(FlashKeyType.Danger, "Failed to create your auction, please review the errors below");
             return View(auction);
         }
 
