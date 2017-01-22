@@ -1,0 +1,24 @@
+﻿@model Auctioneer.Core.Entities.Auction
+
+@{ 
+    ViewBag.Title = Model.Title;
+}
+<div class="auction-container">
+  <div class="row auction-header">
+    <div class="col-xs-12 col-sm-4">
+      <img class="img-responsive" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=First%20Image&w=300&h=300" />
+    </div>
+
+    <div class="col-xs-12 col-sm-8">
+      <h2 class="title">@Model.Title</h2>
+      <small>@Model.Subtitle</small>
+    </div>
+    
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <p>@Model.Description</p>
+    </div>
+  </div>
+</div>
