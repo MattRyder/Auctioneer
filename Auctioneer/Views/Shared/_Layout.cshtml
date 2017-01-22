@@ -16,13 +16,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Auctioneer", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Auctioneer", "Index", "Auction", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Auctions", "Index", "Auction")</li>
                 </ul>
             </div>
         </div>
@@ -36,7 +34,7 @@
       </div>
     </div>
     <footer class="footer-auctioneer">
-      <p>&copy; @DateTime.Now.Year - @Html.ActionLink("Auctioneer", "https://github.com/MattRyder/Auctioneer")</p>
+      <p>&copy; @DateTime.Now.Year - <a href="//github.com/MattRyder/Auctioneer">Auctioneer</a></p>
     </footer>
 
     @Scripts.Render("~/bundles/jquery")

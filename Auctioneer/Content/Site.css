@@ -32,8 +32,9 @@ body {
   flex: 1; }
 
 .footer-auctioneer {
-  text-align: center;
   background-color: #595959;
+  line-height: 4em;
+  text-align: center;
   color: #a6a6a6; }
   .footer-auctioneer a {
     color: #CCC;

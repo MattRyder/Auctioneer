@@ -41,6 +41,7 @@ namespace Auctioneer.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(Auction auction)
         {
             if (ModelState.IsValid)
@@ -49,6 +50,7 @@ namespace Auctioneer.Controllers
                 repo.SaveChanges();
 
                 SetFlashMessage(FlashKeyType.Success, "Successfully listed your item for auction!");
+                return RedirectToAction("Index");
             }
 
             SetFlashMessage(FlashKeyType.Danger, "Failed to create your auction, please review the errors below");
@@ -66,6 +68,7 @@ namespace Auctioneer.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(Auction auction)
         {
             if (ModelState.IsValid)
@@ -75,6 +78,22 @@ namespace Auctioneer.Controllers
             }
 
             return View(auction);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
+        {
+            Auction auction = repo.Find(id);
+
+            if (auction == null)
+                return new HttpNotFoundResult();
+
+            repo.Delete(auction);
+            repo.SaveChanges();
+
+            SetFlashMessage(FlashKeyType.Success, "Successfully delisted and removed your Auction");
+            return RedirectToAction("Index");
         }
 
 

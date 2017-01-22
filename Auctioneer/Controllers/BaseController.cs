@@ -16,7 +16,7 @@ namespace Auctioneer.Controllers
         /// <param name="message">Feedback to show to the user</param>
         protected void SetFlashMessage(FlashKeyType flashKey, string message)
         {
-            ViewData.Add($"alert-{flashKey}", message);
+            TempData.Add($"alert-{flashKey}", message);
         }
     }
 }
