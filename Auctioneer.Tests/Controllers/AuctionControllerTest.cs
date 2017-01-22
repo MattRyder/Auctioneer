@@ -35,6 +35,12 @@ namespace Auctioneer.Tests.Controllers
 
             // Add calls should shove any new items into the list:
             auctionRepo.Setup(repo => repo.Add(It.IsAny<Auction>())).Callback<Auction>((auction) => auctionData.Add(auction));
+
+            // Mock Find to look up the IDs
+            auctionRepo.Setup(repo => repo.Find(It.IsAny<int>())).Returns<int>(id => auctionData.FirstOrDefault(auc => auc.ID == id));
+
+            // Mock Delete
+            auctionRepo.Setup(repo => repo.Delete(It.IsAny<Auction>())).Callback<Auction>(auction => auctionData.Remove(auction));
         }
 
         [TestMethod]
@@ -76,6 +82,43 @@ namespace Auctioneer.Tests.Controllers
             // Verify the object was added to the list
             Assert.IsNotNull(auctionDataArray);
             Assert.AreEqual(auctionDataArray.Length, 7);
+        }
+
+        [TestMethod]
+        public void Edit()
+        {
+            // Made a mistake with #1, i'm actually selling user data, not "Auction 1" </failing_startup>
+            const string ModifiedTitle = "Auctioneer User Data";
+
+            Auction editedAuction = auctionData.First(auc => auc.ID == 1);
+            AuctionController controller = new AuctionController(auctionRepo.Object);
+
+            // Edit the auction and prep it to go back in
+            editedAuction.Title = ModifiedTitle;
+
+            ActionResult result = controller.Edit(editedAuction);
+
+            Assert.IsNotNull(result);
+
+            // Check the edit got called
+            auctionRepo.Verify(act => act.Update(editedAuction), Times.Once);
+
+            Assert.AreEqual(ModifiedTitle, auctionData.First(auc => auc.ID == 1).Title);
+        }
+
+        [TestMethod]
+        public void Delete()
+        {
+            AuctionController controller = new AuctionController(auctionRepo.Object);
+
+            ActionResult result = controller.Delete(1);
+            Assert.IsNotNull(result);
+
+            Auction[] auctionArray = auctionData.ToArray();
+
+            // Assert it's been removed:
+            Assert.IsNull(auctionArray.FirstOrDefault(auc => auc.ID == 1));
+            Assert.AreEqual(5, auctionArray.Length);
         }
     }
 }
