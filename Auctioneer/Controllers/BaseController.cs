@@ -14,9 +14,14 @@ namespace Auctioneer.Controllers
         /// </summary>
         /// <param name="flashKey">Level of warning to be shown</param>
         /// <param name="message">Feedback to show to the user</param>
-        protected void SetFlashMessage(FlashKeyType flashKey, string message)
+        public void SetFlashMessage(FlashKeyType flashKey, string message)
         {
-            TempData.Add($"alert-{flashKey}", message);
+            TempData.Add(GetFlashKey(flashKey), message);
+        }
+
+        public string GetFlashKey(FlashKeyType flashKey)
+        {
+            return $"alert-{flashKey}";
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Auctioneer.Core.Entities
 
         public Bid WinningBid()
         {
-            Bid winningBid = Bids.OrderBy(b => b.Amount).LastOrDefault();
+            Bid winningBid = (Bids != null) ? Bids.OrderBy(b => b.Amount).LastOrDefault() : null;
             return (winningBid != null) ? winningBid : new Bid() { Amount = MinimumPrice };
         }
     }

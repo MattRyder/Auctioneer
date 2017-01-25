@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Auctioneer.Controllers;
 using System.Web.Mvc;
 using System.Linq;
+using Auctioneer.Models;
 
 namespace Auctioneer.Tests.Controllers
 {
@@ -21,12 +22,12 @@ namespace Auctioneer.Tests.Controllers
         {
             auctionData = new List<Auction>()
             {
-                new Auction() { ID = 1, Title = "Auction A", Subtitle = "Auction A Subtitle", Description = "Auction A Description" },
-                new Auction() { ID = 2, Title = "Auction B", Subtitle = "Auction B Subtitle", Description = "Auction B Description" },
-                new Auction() { ID = 3, Title = "Auction C", Subtitle = "Auction C Subtitle", Description = "Auction C Description" },
-                new Auction() { ID = 4, Title = "Auction D", Subtitle = "Auction D Subtitle", Description = "Auction D Description" },
-                new Auction() { ID = 5, Title = "Auction E", Subtitle = "Auction E Subtitle", Description = "Auction E Description" },
-                new Auction() { ID = 6, Title = "Auction F", Subtitle = "Auction F Subtitle", Description = "Auction F Description" }
+                new Auction() { ID = 1, Title = "Auction A", Subtitle = "Auction A Subtitle", Description = "Auction A Description", MinimumPrice = 12.50M, Bids = new List<Bid>() },
+                new Auction() { ID = 2, Title = "Auction B", Subtitle = "Auction B Subtitle", Description = "Auction B Description", MinimumPrice = 0M },
+                new Auction() { ID = 3, Title = "Auction C", Subtitle = "Auction C Subtitle", Description = "Auction C Description", MinimumPrice = 1.00M },
+                new Auction() { ID = 4, Title = "Auction D", Subtitle = "Auction D Subtitle", Description = "Auction D Description", MinimumPrice = 0M },
+                new Auction() { ID = 5, Title = "Auction E", Subtitle = "Auction E Subtitle", Description = "Auction E Description", MinimumPrice = 150.00M },
+                new Auction() { ID = 6, Title = "Auction F", Subtitle = "Auction F Subtitle", Description = "Auction F Description", MinimumPrice = 0M }
             };
             auctionRepo = new Mock<IRepo<Auction>>();
 
@@ -76,6 +77,11 @@ namespace Auctioneer.Tests.Controllers
             // Verify we got a result before tinkering with it
             Assert.IsNotNull(result);
 
+            ViewResult viewResult = result as ViewResult;
+
+            // Assert the feedback flash message is correct:
+            Assert.AreEqual(AuctionController.FlashMessageCreateSuccess, controller.TempData[controller.GetFlashKey(Models.FlashKeyType.Success)]);
+
             // Verify that `add` gets called
             auctionRepo.Verify(act => act.Add(newAuction), Times.Once);
 
@@ -97,7 +103,6 @@ namespace Auctioneer.Tests.Controllers
             editedAuction.Title = ModifiedTitle;
 
             ActionResult result = controller.Edit(editedAuction);
-
             Assert.IsNotNull(result);
 
             // Check the edit got called
@@ -119,6 +124,75 @@ namespace Auctioneer.Tests.Controllers
             // Assert it's been removed:
             Assert.IsNull(auctionArray.FirstOrDefault(auc => auc.ID == 1));
             Assert.AreEqual(5, auctionArray.Length);
+        }
+
+        [TestMethod]
+        public void PlaceBid_Valid()
+        {
+            AuctionController controller = new AuctionController(auctionRepo.Object);
+
+            ActionResult result = controller.Bid(1, new Bid() { Amount = 12.51M, Auction_ID = 1 });
+            Assert.IsNotNull(result);
+
+            PartialViewResult pvResult = result as PartialViewResult;
+
+            // Assert the right view is returned:
+            Assert.IsNotNull(pvResult);
+            Assert.AreEqual("BidPlacePartial", pvResult.ViewName);
+
+            // Assert the model is correct:
+            PlaceBidViewModel viewModel = (PlaceBidViewModel)pvResult.Model;
+            Assert.AreEqual(auctionData.FirstOrDefault(auc => auc.ID == 1), viewModel.Auction);
+
+            Bid viewModelBid = viewModel.WinningBid;
+            Assert.AreEqual(12.51M, viewModelBid.Amount);
+        }
+
+        [TestMethod]
+        public void PlaceBid_ValidExtreme()
+        {
+            AuctionController controller = new AuctionController(auctionRepo.Object);
+
+            // Place a bid for £12,000,00.51, high but valid:
+            ActionResult result = controller.Bid(1, new Bid() { Amount = 12000000.51M, Auction_ID = 1 });
+            Assert.IsNotNull(result);
+
+            PartialViewResult pvResult = result as PartialViewResult;
+
+            // Assert the right view is returned:
+            Assert.IsNotNull(pvResult);
+            Assert.AreEqual("BidPlacePartial", pvResult.ViewName);
+
+            // Assert the model is correct:
+            PlaceBidViewModel viewModel = (PlaceBidViewModel)pvResult.Model;
+            Assert.AreEqual(auctionData.FirstOrDefault(auc => auc.ID == 1), viewModel.Auction);
+
+            Bid viewModelBid = viewModel.WinningBid;
+            Assert.AreEqual(12000000.51M, viewModelBid.Amount);
+        }
+
+        [TestMethod]
+        public void PlaceBid_InvalidUnderReservePrice()
+        {
+            AuctionController controller = new AuctionController(auctionRepo.Object);
+
+            // Place a bid for £1.21, under the Reserve Price of £12.51
+            ActionResult result = controller.Bid(1, new Bid() { Amount = 1.51M, Auction_ID = 1 });
+            Assert.IsNotNull(result);
+
+            PartialViewResult pvResult = result as PartialViewResult;
+
+            // Assert the right view is returned:
+            Assert.IsNotNull(pvResult);
+            Assert.AreEqual("BidPlacePartial", pvResult.ViewName);
+
+            // Assert the model is correct:
+            PlaceBidViewModel viewModel = (PlaceBidViewModel)pvResult.Model;
+            Assert.AreEqual(auctionData.FirstOrDefault(auc => auc.ID == 1), viewModel.Auction);
+
+            // Should not have altered the WinningBid for the Auction
+            Bid viewModelBid = viewModel.WinningBid;
+            Assert.AreEqual(12.50M, viewModelBid.Amount);
         }
     }
 }

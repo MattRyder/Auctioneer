@@ -13,6 +13,12 @@ namespace Auctioneer.Controllers
     {
         private IRepo<Auction> repo;
 
+        public static readonly string FlashMessageCreateSuccess = "Successfully listed your item for auction!";
+        public static readonly string FlashMessageCreateFailure = "Failed to create your auction, please review the errors below";
+        public static readonly string FlashMessageUpdateSuccess = "Successfully updated your auction. Changes will be reflected on the site immediately.";
+        public static readonly string FlashMessageUpdateFailure = "Failed to update your auction, please check errors and try again.";
+        public static readonly string FlashMessageDeleteSuccess = "Successfully delisted and removed your Auction";
+
         public AuctionController(IRepo<Auction> auctionRepo)
         {
             this.repo = auctionRepo;
@@ -56,11 +62,11 @@ namespace Auctioneer.Controllers
                 repo.Add(auction);
                 repo.SaveChanges();
 
-                SetFlashMessage(FlashKeyType.Success, "Successfully listed your item for auction!");
+                SetFlashMessage(FlashKeyType.Success, FlashMessageCreateSuccess);
                 return RedirectToAction("Index");
             }
 
-            SetFlashMessage(FlashKeyType.Danger, "Failed to create your auction, please review the errors below");
+            SetFlashMessage(FlashKeyType.Danger, FlashMessageCreateFailure);
             return View(auction);
         }
 
@@ -83,11 +89,11 @@ namespace Auctioneer.Controllers
                 repo.Update(auction);
                 repo.SaveChanges();
 
-                SetFlashMessage(FlashKeyType.Success, "Successfully updated your auction. Changes will be reflected on the site immediately.");
+                SetFlashMessage(FlashKeyType.Success, FlashMessageUpdateSuccess);
                 return RedirectToAction("Details", new { id = auction.ID });
             } else
             {
-                SetFlashMessage(FlashKeyType.Danger, "Failed to update your auction, please check errors and try again.");
+                SetFlashMessage(FlashKeyType.Danger, FlashMessageUpdateFailure);
                 return View(auction);
             }
 
@@ -105,7 +111,7 @@ namespace Auctioneer.Controllers
             repo.Delete(auction);
             repo.SaveChanges();
 
-            SetFlashMessage(FlashKeyType.Success, "Successfully delisted and removed your Auction");
+            SetFlashMessage(FlashKeyType.Success, FlashMessageDeleteSuccess);
             return RedirectToAction("Index");
         }
 
