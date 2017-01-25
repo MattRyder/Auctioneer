@@ -81,4 +81,16 @@ body {
   .auction-header {
     padding-bottom: 60px;
   }
+
+  #bid-container {
+    .validation-summary-errors {
+      ul {
+        padding: 5px 0 0 15px;
+        li {
+          color: #a94442;
+          list-style-type: none;
+        }
+      }
+    }
+  }
 }

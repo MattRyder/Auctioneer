@@ -147,11 +147,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AuctionController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BidController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\AuctioneerDependencyResolver.cs" />
+    <Compile Include="Models\AuctionViewModels.cs" />
     <Compile Include="Models\FlashKeyType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -206,10 +208,10 @@
     <Content Include="Views\Auction\EditorPartial.cshtml" />
     <Content Include="Views\Shared\Alert.cshtml" />
     <Content Include="Views\Auction\Details.cshtml" />
+    <Content Include="Views\Shared\BidPlacePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

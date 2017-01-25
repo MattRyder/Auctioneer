@@ -36,6 +36,7 @@ namespace Auctioneer.Infrastructure
         private void RegisterServices()
         {
             kernel.Bind<IRepo<Auction>>().To<EFAuctionRepo>();
+            kernel.Bind<IRepo<Bid>>().To<EFBidRepo>();
         }
     }
 }

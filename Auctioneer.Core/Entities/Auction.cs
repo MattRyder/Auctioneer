@@ -20,7 +20,15 @@ namespace Auctioneer.Core.Entities
         [Required]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
+        
+        public decimal MinimumPrice { get; set; }
 
-        public ICollection<Bid> Bids { get; set; }
+        public virtual ICollection<Bid> Bids { get; set; }
+
+        public Bid WinningBid()
+        {
+            if (Bids == null) return new Bid();
+            return Bids.OrderBy(b => b.Amount).LastOrDefault();
+        }
     }
 }

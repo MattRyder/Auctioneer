@@ -31,7 +31,14 @@ namespace Auctioneer.Controllers
             if (auction == null)
                 return new HttpNotFoundResult();
 
-            return View(auction);
+            PlaceBidViewModel model = new PlaceBidViewModel()
+            {
+                Auction = auction,
+                Bid = new Bid(),
+                WinningBid = auction.WinningBid()
+            };
+
+            return View(model);
         }
 
         [HttpGet]
@@ -96,6 +103,32 @@ namespace Auctioneer.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Bid(int id, Bid bid)
+        {
+            Auction auction = repo.Find(id);
 
+            if (bid.Amount <= auction.WinningBid().Amount)
+                ModelState.AddModelError("", $"Bid must be more than the current bid of {auction.WinningBid().Amount.ToString("c")}");
+
+            if (auction.MinimumPrice > 0 && bid.Amount <= auction.MinimumPrice)
+                ModelState.AddModelError("", $"Bid must be more than the reserved price of {auction.MinimumPrice.ToString("c")}");
+
+            if (ModelState.IsValid)
+            {
+                auction.Bids.Add(bid);
+                repo.SaveChanges();
+            }
+
+            PlaceBidViewModel viewModel = new PlaceBidViewModel()
+            {
+                Auction = auction,
+                Bid = new Bid() { Amount = 0.0M },
+                WinningBid = auction.WinningBid()
+            };
+
+            return PartialView("BidPlacePartial", viewModel);
+        }
     }
 }

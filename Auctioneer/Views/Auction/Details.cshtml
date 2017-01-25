@@ -1,7 +1,7 @@
-﻿@model Auctioneer.Core.Entities.Auction
+﻿@model Auctioneer.Models.PlaceBidViewModel
 
 @{ 
-    ViewBag.Title = Model.Title;
+    ViewBag.Title = Model.Auction.Title;
 }
 <div class="auction-container">
   <div class="row auction-header">
@@ -10,15 +10,25 @@
     </div>
 
     <div class="col-xs-12 col-sm-8">
-      <h2 class="title">@Model.Title</h2>
-      <small>@Model.Subtitle</small>
+      <div class="row">
+        <h2 class="title">@Model.Auction.Title</h2>
+        <small>@Model.Auction.Subtitle</small>
+      </div>
+      
+
+      <div class="row" id="bid-container">
+        @Html.Partial("BidPlacePartial", Model)
+      </div>
     </div>
-    
   </div>
 
   <div class="row">
     <div class="col-xs-12">
-      <p>@Model.Description</p>
+      <p>@Model.Auction.Description</p>
     </div>
   </div>
 </div>
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+}
