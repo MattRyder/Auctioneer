@@ -45,8 +45,10 @@ namespace Auctioneer.Infrastructure.Repositories
 
         public void Update(Auction entity)
         {
-            if (context.Entry(entity).State != System.Data.Entity.EntityState.Detached)
-                context.Entry(entity).State = System.Data.Entity.EntityState.Modified;
+            if (context.Entry(entity).State == System.Data.Entity.EntityState.Detached)
+                context.Auctions.Attach(entity);
+
+            context.Entry(entity).State = System.Data.Entity.EntityState.Modified;
         }
 
         public IQueryable<Auction> Where(Expression<Func<Auction, bool>> predicate)

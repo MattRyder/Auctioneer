@@ -61,7 +61,7 @@ body {
   background-color: #595959;
   line-height: 4em;
   text-align: center;
-
+  margin-top: 60px;
   color: #a6a6a6;
 
   a {
@@ -77,9 +77,10 @@ body {
 .auction-container {
   background-color: #FFF;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+  padding-bottom: 30px;
 
   .auction-header {
-    padding-bottom: 60px;
+    padding-bottom: 2em;
   }
 
   #bid-container {
@@ -93,4 +94,20 @@ body {
       }
     }
   }
+
+  h4.subtitle {
+    color: #9F9F9F;
+  }
+
+  h3.description {
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+/*
+ * A light-coloured text style for non-critical hints under elements
+ */
+.text-hint {
+  color: #9F9F9F;
 }

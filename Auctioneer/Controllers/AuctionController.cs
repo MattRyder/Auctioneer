@@ -82,9 +82,15 @@ namespace Auctioneer.Controllers
             {
                 repo.Update(auction);
                 repo.SaveChanges();
+
+                SetFlashMessage(FlashKeyType.Success, "Successfully updated your auction. Changes will be reflected on the site immediately.");
+                return RedirectToAction("Details", new { id = auction.ID });
+            } else
+            {
+                SetFlashMessage(FlashKeyType.Danger, "Failed to update your auction, please check errors and try again.");
+                return View(auction);
             }
 
-            return View(auction);
         }
 
         [HttpPost]
@@ -109,11 +115,10 @@ namespace Auctioneer.Controllers
         {
             Auction auction = repo.Find(id);
 
-            if (bid.Amount <= auction.WinningBid().Amount)
-                ModelState.AddModelError("", $"Bid must be more than the current bid of {auction.WinningBid().Amount.ToString("c")}");
-
             if (auction.MinimumPrice > 0 && bid.Amount <= auction.MinimumPrice)
                 ModelState.AddModelError("", $"Bid must be more than the reserved price of {auction.MinimumPrice.ToString("c")}");
+            else if (bid.Amount <= auction.WinningBid().Amount)
+                ModelState.AddModelError("", $"Bid must be more than the current bid of {auction.WinningBid().Amount.ToString("c")}");
 
             if (ModelState.IsValid)
             {

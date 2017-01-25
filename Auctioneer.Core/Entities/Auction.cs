@@ -13,22 +13,27 @@ namespace Auctioneer.Core.Entities
         public int ID { get; set; }
 
         [Required]
+        [Display(Name = "Auction Name", Description = "The name of what you are auctioning")]
         public string Title { get; set; }
 
+        [MaxLength(140, ErrorMessage = "Subtitle must be less than 140 characters")]
+        [Display(Name = "Auction Subtitle", Description = "A brief explanation of the auction item's features, max. 140 characters")]
         public string Subtitle { get; set; }
 
         [Required]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
         
+        [DataType(DataType.Currency)]
+        [Display(Name = "Reserve Price", Description = "The minimum bid you will accept, optional")]
         public decimal MinimumPrice { get; set; }
 
         public virtual ICollection<Bid> Bids { get; set; }
 
         public Bid WinningBid()
         {
-            if (Bids == null) return new Bid();
-            return Bids.OrderBy(b => b.Amount).LastOrDefault();
+            Bid winningBid = Bids.OrderBy(b => b.Amount).LastOrDefault();
+            return (winningBid != null) ? winningBid : new Bid() { Amount = MinimumPrice };
         }
     }
 }

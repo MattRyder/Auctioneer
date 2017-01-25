@@ -90,6 +90,14 @@
     <Compile Include="Migrations\201701242151178_ForeignFieldMigration.Designer.cs">
       <DependentUpon>201701242151178_ForeignFieldMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701252109477_AddReservePriceToAuction.cs" />
+    <Compile Include="Migrations\201701252109477_AddReservePriceToAuction.Designer.cs">
+      <DependentUpon>201701252109477_AddReservePriceToAuction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701252147187_AddConstraintToAuction.cs" />
+    <Compile Include="Migrations\201701252147187_AddConstraintToAuction.Designer.cs">
+      <DependentUpon>201701252147187_AddConstraintToAuction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EFAuctionRepo.cs" />
@@ -114,6 +122,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701242151178_ForeignFieldMigration.resx">
       <DependentUpon>201701242151178_ForeignFieldMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701252109477_AddReservePriceToAuction.resx">
+      <DependentUpon>201701252109477_AddReservePriceToAuction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701252147187_AddConstraintToAuction.resx">
+      <DependentUpon>201701252147187_AddConstraintToAuction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

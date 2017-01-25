@@ -152,6 +152,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Infrastructure\AuctioneerDependencyResolver.cs" />
     <Compile Include="Models\AuctionViewModels.cs" />
     <Compile Include="Models\FlashKeyType.cs" />
@@ -209,6 +210,7 @@
     <Content Include="Views\Shared\Alert.cshtml" />
     <Content Include="Views\Auction\Details.cshtml" />
     <Content Include="Views\Shared\BidPlacePartial.cshtml" />
+    <Content Include="Views\Auction\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
