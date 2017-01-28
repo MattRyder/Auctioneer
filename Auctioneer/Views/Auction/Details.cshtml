@@ -29,7 +29,18 @@
   <div class="row">
     <div class="col-sm-10 col-sm-offset-1">
       <h3 class="description">Description</h3>
-      <p>@Model.Auction.Description</p>
+      @Html.Raw(Model.Auction.Description)
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-10 col-sm-offset-1 text-right">
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Auction.ID }, new { @class = "btn btn-default" })
+        @using (Html.BeginForm("Delete", "Auction", new { id = Model.Auction.ID }, FormMethod.Post, new { @class = "auc-inline" }))
+        {
+            @Html.AntiForgeryToken()
+            <input class="btn btn-danger" type="submit" value="Delete" name="Delete" />
+        }
     </div>
   </div>
 </div>

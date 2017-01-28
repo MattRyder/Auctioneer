@@ -20,6 +20,7 @@ namespace Auctioneer.Core.Entities
 
         [Required]
         [Display(Name = "Bid Amount")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:#}")]
         public decimal Amount { get; set; }
     }
 }

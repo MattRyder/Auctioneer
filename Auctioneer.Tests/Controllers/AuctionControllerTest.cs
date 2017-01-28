@@ -8,6 +8,7 @@ using Auctioneer.Controllers;
 using System.Web.Mvc;
 using System.Linq;
 using Auctioneer.Models;
+using Auctioneer.Infrastructure;
 
 namespace Auctioneer.Tests.Controllers
 {
@@ -16,10 +17,14 @@ namespace Auctioneer.Tests.Controllers
     {
         private static List<Auction> auctionData;
         private static Mock<IRepo<Auction>> auctionRepo;
+        private static AuctioneerHtmlSanitizer sanitizer;
 
         [TestInitialize]
         public void TestInitialize()
         {
+            // Create html sanitizer for the test suite:
+            sanitizer = new AuctioneerHtmlSanitizer();
+
             auctionData = new List<Auction>()
             {
                 new Auction() { ID = 1, Title = "Auction A", Subtitle = "Auction A Subtitle", Description = "Auction A Description", MinimumPrice = 12.50M, Bids = new List<Bid>() },
@@ -47,7 +52,7 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void Index()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object);
+            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 
             ViewResult result = controller.Index() as ViewResult;
 
@@ -69,7 +74,7 @@ namespace Auctioneer.Tests.Controllers
         {
             Auction newAuction = new Auction() { ID = 7, Title = "New Auction", Subtitle = "New Auction Subtitle", Description = "I will put a description here" };
 
-            AuctionController controller = new AuctionController(auctionRepo.Object);
+            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 
             ActionResult result = controller.Create(newAuction);
             Auction[] auctionDataArray = auctionData.ToArray();
@@ -97,7 +102,7 @@ namespace Auctioneer.Tests.Controllers
             const string ModifiedTitle = "Auctioneer User Data";
 
             Auction editedAuction = auctionData.First(auc => auc.ID == 1);
-            AuctionController controller = new AuctionController(auctionRepo.Object);
+            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 
             // Edit the auction and prep it to go back in
             editedAuction.Title = ModifiedTitle;
@@ -114,7 +119,7 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void Delete()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object);
+            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 
             ActionResult result = controller.Delete(1);
             Assert.IsNotNull(result);
@@ -129,7 +134,7 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void PlaceBid_Valid()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object);
+            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 
             ActionResult result = controller.Bid(1, new Bid() { Amount = 12.51M, Auction_ID = 1 });
             Assert.IsNotNull(result);
@@ -151,7 +156,7 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void PlaceBid_ValidExtreme()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object);
+            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 
             // Place a bid for £12,000,00.51, high but valid:
             ActionResult result = controller.Bid(1, new Bid() { Amount = 12000000.51M, Auction_ID = 1 });
@@ -174,7 +179,7 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void PlaceBid_InvalidUnderReservePrice()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object);
+            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 
             // Place a bid for £1.21, under the Reserve Price of £12.51
             ActionResult result = controller.Bid(1, new Bid() { Amount = 1.51M, Auction_ID = 1 });

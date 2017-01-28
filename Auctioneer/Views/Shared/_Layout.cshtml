@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Auctioneer</title>
-    @Styles.Render("~/Content/css")
+    @Styles.Render("~/bundles/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
 </head>
@@ -36,8 +36,7 @@
     <footer class="footer-auctioneer">
       <p>&copy; @DateTime.Now.Year - <a href="//github.com/MattRyder/Auctioneer">Auctioneer</a></p>
     </footer>
-
-    @Scripts.Render("~/bundles/jquery")
+    
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

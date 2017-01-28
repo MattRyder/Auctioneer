@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Vereyon.Web;
 
 namespace Auctioneer.Infrastructure
 {
@@ -37,6 +38,8 @@ namespace Auctioneer.Infrastructure
         {
             kernel.Bind<IRepo<Auction>>().To<EFAuctionRepo>();
             kernel.Bind<IRepo<Bid>>().To<EFBidRepo>();
+
+            kernel.Bind<IHtmlSanitizer>().To<AuctioneerHtmlSanitizer>();
         }
     }
 }

@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Vereyon.Web;
 
 namespace Auctioneer.Controllers
 {
     public class AuctionController : BaseController
     {
         private IRepo<Auction> repo;
+        private IHtmlSanitizer sanitizer;
 
         public static readonly string FlashMessageCreateSuccess = "Successfully listed your item for auction!";
         public static readonly string FlashMessageCreateFailure = "Failed to create your auction, please review the errors below";
@@ -19,9 +21,10 @@ namespace Auctioneer.Controllers
         public static readonly string FlashMessageUpdateFailure = "Failed to update your auction, please check errors and try again.";
         public static readonly string FlashMessageDeleteSuccess = "Successfully delisted and removed your Auction";
 
-        public AuctionController(IRepo<Auction> auctionRepo)
+        public AuctionController(IRepo<Auction> auctionRepo, IHtmlSanitizer htmlSanitizer)
         {
             this.repo = auctionRepo;
+            this.sanitizer = htmlSanitizer;
         }
 
         // GET: Auction
@@ -54,9 +57,13 @@ namespace Auctioneer.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Auction auction)
         {
+            // Ensure the description doesn't contain anything but the whitelisted HTML tags:
+            auction.Description = sanitizer.Sanitize(auction.Description);
+
             if (ModelState.IsValid)
             {
                 repo.Add(auction);
@@ -81,9 +88,13 @@ namespace Auctioneer.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Auction auction)
         {
+            // Ensure the description doesn't contain anything but the whitelisted HTML tags:
+            auction.Description = sanitizer.Sanitize(auction.Description);
+
             if (ModelState.IsValid)
             {
                 repo.Update(auction);
@@ -135,7 +146,7 @@ namespace Auctioneer.Controllers
             PlaceBidViewModel viewModel = new PlaceBidViewModel()
             {
                 Auction = auction,
-                Bid = new Bid() { Amount = 0.0M },
+                Bid = new Bid(),
                 WinningBid = auction.WinningBid()
             };
 
