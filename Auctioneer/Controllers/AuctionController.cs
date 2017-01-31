@@ -21,6 +21,14 @@ namespace Auctioneer.Controllers
         public static readonly string FlashMessageUpdateFailure = "Failed to update your auction, please check errors and try again.";
         public static readonly string FlashMessageDeleteSuccess = "Successfully delisted and removed your Auction";
 
+        SelectList durationSelectList = new SelectList(new List<SelectListItem>()
+        {
+            new SelectListItem() { Text = "One Day", Value = "1" },
+            new SelectListItem() { Text = "Three Days", Value = "3" },
+            new SelectListItem() { Text = "Five Days", Value = "5" },
+            new SelectListItem() { Text = "Seven Days", Value = "7" }
+        }, "Value", "Text");
+
         public AuctionController(IRepo<Auction> auctionRepo, IHtmlSanitizer htmlSanitizer)
         {
             this.repo = auctionRepo;
@@ -53,16 +61,20 @@ namespace Auctioneer.Controllers
         [HttpGet]
         public ActionResult Create()
         {
+            ViewBag.DurationSelectList = durationSelectList;
             return View(new Auction());
         }
 
         [HttpPost]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Auction auction)
+        public ActionResult Create(Auction auction, int duration)
         {
             // Ensure the description doesn't contain anything but the whitelisted HTML tags:
             auction.Description = sanitizer.Sanitize(auction.Description);
+
+            duration = (duration > 0 || duration <= 7) ? duration : 7;
+            auction.EndDate = DateTime.Now.AddDays(duration);
 
             if (ModelState.IsValid)
             {

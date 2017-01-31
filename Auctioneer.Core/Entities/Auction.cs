@@ -28,6 +28,10 @@ namespace Auctioneer.Core.Entities
         [Display(Name = "Reserve Price", Description = "The minimum bid you will accept, optional")]
         public decimal MinimumPrice { get; set; }
 
+        [Required]
+        [Display(Name = "Auction End Date")]
+        public DateTime EndDate { get; set; }
+
         public virtual ICollection<Bid> Bids { get; set; }
 
         public Bid WinningBid()

@@ -76,7 +76,7 @@ namespace Auctioneer.Tests.Controllers
 
             AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 
-            ActionResult result = controller.Create(newAuction);
+            ActionResult result = controller.Create(newAuction, 5);
             Auction[] auctionDataArray = auctionData.ToArray();
 
             // Verify we got a result before tinkering with it
