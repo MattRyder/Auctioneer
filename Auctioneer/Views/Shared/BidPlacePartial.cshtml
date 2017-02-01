@@ -6,23 +6,28 @@
   </div>
 </div>
 
-@using (Html.BeginForm("Bid", "Auction", new { id = Model.Auction.ID }, FormMethod.Post, new { id = "bid-form" }))
+@if (Model.Auction.EndDate >= DateTime.Now)
 {
-    @Html.AntiForgeryToken()
+    using (Html.BeginForm("Bid", "Auction", new { id = Model.Auction.ID }, FormMethod.Post, new { id = "bid-form" }))
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="row">
-      <div class="col-sm-6">
-        @Html.EditorFor(model => model.Bid.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your bid amount" } })
-      </div>
-      <div class="col-sm-3">
-        <input type="submit" class="btn btn-success" name="submit" value="Submit Bid" />
-      </div>
-    </div>
+        <div class="row">
+          <div class="col-sm-6">
+            @Html.EditorFor(model => model.Bid.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your bid amount" } })
+          </div>
+          <div class="col-sm-3">
+            <input type="submit" class="btn btn-success" name="submit" value="Submit Bid" />
+          </div>
+        </div>
 
-    <div class="row validation-summary">
-      @Html.ValidationSummary()
-    </div>
+        <div class="row validation-summary">
+          @Html.ValidationSummary()
+        </div>
+    }
 }
+
+
 
 <script type="text/javascript">
   $("form#bid-form").submit(function (e) {
