@@ -27,9 +27,9 @@ namespace Auctioneer
                       "~/Scripts/ckeditor/ckeditor.js",
                       "~/Scripts/ckeditor/config.js"));
 
-            bundles.Add(new StyleBundle("~/bundles/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/bundles/css")
+                .Include("~/Content/bootstrap.css")
+                .Include("~/Content/site.css", new CssRewriteUrlTransform()));
         }
     }
 }

@@ -14,7 +14,7 @@
     <table class="table table-striped">
       <tr>
         <th>@Html.DisplayNameFor(model => model.Title)</th>
-        <th>@Html.DisplayNameFor(model => model.Description)</th>
+        <th>@Html.DisplayNameFor(model => model.Subtitle)</th>
         <th></th>
       </tr>
 
@@ -22,15 +22,7 @@
       {
           <tr>
             <td>@Html.ActionLink(item.Title, "Details", new { id = item.ID })</td>
-            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-            <td>
-              @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-xs btn-default" })
-              @using (Html.BeginForm("Delete", "Auction", new { id = item.ID }))
-              {
-                @Html.AntiForgeryToken()
-                <input class="btn btn-xs btn-danger" type="submit" value="Delete" name="Delete" />
-              }
-            </td>
+            <td>@Html.DisplayFor(modelItem => item.Subtitle)</td>
           </tr>
       }
 
