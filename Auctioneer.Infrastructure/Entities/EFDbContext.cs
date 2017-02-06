@@ -1,16 +1,17 @@
 ﻿using Auctioneer.Core.Entities;
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Auctioneer.Infrastructure.Entities
 {
-    public class EFDbContext : DbContext
+    public class EFDbContext : IdentityDbContext<AuctioneerUser>
     {
         public EFDbContext() : base() { }
+
+        public static EFDbContext Create()
+        {
+            return new EFDbContext();
+        }
 
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<Bid> Bids { get; set; }

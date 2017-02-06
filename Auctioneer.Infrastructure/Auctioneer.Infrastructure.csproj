@@ -42,6 +42,10 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
@@ -81,6 +85,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\AuctioneerSignInManager.cs" />
+    <Compile Include="Entities\AuctioneerUserManager.cs" />
     <Compile Include="Entities\EFDbContext.cs" />
     <Compile Include="Migrations\201701212010055_InitialMigration.cs" />
     <Compile Include="Migrations\201701212010055_InitialMigration.Designer.cs">
@@ -101,6 +107,10 @@
     <Compile Include="Migrations\201701290002286_AddEndDateToAuction.cs" />
     <Compile Include="Migrations\201701290002286_AddEndDateToAuction.Designer.cs">
       <DependentUpon>201701290002286_AddEndDateToAuction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702022037451_CreateAuctioneerUser.cs" />
+    <Compile Include="Migrations\201702022037451_CreateAuctioneerUser.Designer.cs">
+      <DependentUpon>201702022037451_CreateAuctioneerUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -135,6 +145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701290002286_AddEndDateToAuction.resx">
       <DependentUpon>201701290002286_AddEndDateToAuction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702022037451_CreateAuctioneerUser.resx">
+      <DependentUpon>201702022037451_CreateAuctioneerUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
