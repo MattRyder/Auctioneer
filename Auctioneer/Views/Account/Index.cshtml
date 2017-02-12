@@ -1,0 +1,38 @@
+﻿@model Auctioneer.Models.AccountIndexViewModel
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2>Profile</h2>
+    <h5>Update your profile, or view and manage your Auctions and Bids</h5>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12 col-sm-2">
+        <ul class="nav nav-pills nav-stacked">
+          <li role="presentation" class="active"><a href="#buying" data-toggle="tab">Buying</a></li>
+          <li role="presentation" class=""><a href="#selling" data-toggle="tab">Selling</a></li>
+          <li role="presentation" class=""><a href="#edit" data-toggle="tab">Edit Profile</a></li>
+        </ul>
+      </div>
+      <div class="col-xs-12 col-sm-10">
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="buying">
+            <h1>Buying</h1>
+            @Html.Partial("AuctionListPartial", Model.Buying)
+          </div>
+          <div role="tabpanel" class="tab-pane" id="selling">
+            <h1>Selling</h1>
+            @Html.Partial("AuctionListPartial", Model.Buying)
+          </div>
+          <div role="tabpanel" class="tab-pane" id="edit"><h1>Edit Profile</h1></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

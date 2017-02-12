@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Auctioneer.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Auctioneer.Models
         [Required]
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
-        [StringLength(128, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(128, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 8)]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
@@ -63,5 +64,16 @@ namespace Auctioneer.Models
     public class ExternalLoginListViewModel
     {
         public string ReturnUrl { get; set; }
+    }
+
+
+    /// <summary>
+    /// View Model for Account#Index
+    /// </summary>
+    public class AccountIndexViewModel
+    {
+        public AuctioneerUser User { get; set; }
+        public IEnumerable<Auction> Buying { get; set; }
+        public IEnumerable<Auction> Selling { get; set; }
     }
 }

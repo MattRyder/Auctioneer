@@ -15,30 +15,49 @@ namespace Auctioneer.Infrastructure.Entities
     {
         public AuctioneerUserManager(IUserStore<AuctioneerUser> store) : base(store) { }
 
-        public static AuctioneerUserManager Create(IdentityFactoryOptions<AuctioneerUserManager> opts, IOwinContext ctx)
+        /// <summary>
+        /// Create an instance of the User Manager
+        /// </summary>
+        /// <param name="options">Identity options.</param>
+        /// <param name="context">Database context.</param>
+        /// <returns></returns>
+        public static AuctioneerUserManager Create(
+            IdentityFactoryOptions<AuctioneerUserManager> options,
+            IOwinContext context)
         {
-            var manager = new AuctioneerUserManager(new UserStore<AuctioneerUser>(ctx.Get<EFDbContext>()));
+            // Create AppUserManager context from DbContext:
+            var manager = new AuctioneerUserManager(
+                new UserStore<AuctioneerUser>(context.Get<EFDbContext>()));
 
+            // Username Validation Logic:
             manager.UserValidator = new UserValidator<AuctioneerUser>(manager)
             {
-                AllowOnlyAlphanumericUserNames = true,
+                AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
             };
 
-            manager.PasswordValidator = new PasswordValidator()
+            // Password Validation Logic:
+            manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 8,
                 RequireNonLetterOrDigit = false,
-                RequireDigit = true
+                RequireDigit = false,
+                RequireLowercase = false,
+                RequireUppercase = false
             };
 
-            manager.UserLockoutEnabledByDefault = false;
+            // Configure user lockout defaults:
+            manager.UserLockoutEnabledByDefault = true;
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(10);
-            manager.MaxFailedAccessAttemptsBeforeLockout = 3;
+            manager.MaxFailedAccessAttemptsBeforeLockout = 5;
 
-            var dpp = opts.DataProtectionProvider;
-            if(dpp != null)
-                manager.UserTokenProvider = new DataProtectorTokenProvider<AuctioneerUser>(dpp.Create("ASP.NET Identity"));
+            // Setup Data Protection Provider:
+            var dataProtectionProvider = options.DataProtectionProvider;
+            if (dataProtectionProvider != null)
+            {
+                manager.UserTokenProvider = new DataProtectorTokenProvider<AuctioneerUser>(
+                    dataProtectionProvider.Create("ASP.NET Identity"));
+            }
 
             return manager;
         }

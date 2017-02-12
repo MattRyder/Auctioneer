@@ -11,7 +11,6 @@ namespace Auctioneer.App_Start
     using Ninject;
     using Ninject.Web.Common;
     using System.Web.Mvc;
-    using Ninject.Web.Mvc;
     using Infrastructure;
 
     public static class NinjectWebCommon 

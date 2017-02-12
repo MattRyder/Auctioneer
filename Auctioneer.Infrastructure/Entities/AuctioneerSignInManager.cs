@@ -14,7 +14,7 @@ namespace Auctioneer.Infrastructure.Entities
 {
     public class AuctioneerSignInManager : SignInManager<AuctioneerUser, string>
     {
-        public AuctioneerSignInManager(UserManager<AuctioneerUser, string> userManager, IAuthenticationManager authenticationManager)
+        public AuctioneerSignInManager(AuctioneerUserManager userManager, IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager) { }
 
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(AuctioneerUser user)
@@ -22,9 +22,9 @@ namespace Auctioneer.Infrastructure.Entities
             return user.GenerateUserIdentityAsync((AuctioneerUserManager)UserManager);
         }
 
-        public static AuctioneerSignInManager Create(IdentityFactoryOptions<AuctioneerSignInManager> opts, IOwinContext ctx)
+        public static AuctioneerSignInManager Create(IdentityFactoryOptions<AuctioneerSignInManager> options, IOwinContext context)
         {
-            return new AuctioneerSignInManager(ctx.GetUserManager<AuctioneerUserManager>(), ctx.Authentication);
+            return new AuctioneerSignInManager(context.GetUserManager<AuctioneerUserManager>(), context.Authentication);
         }
     }
 }

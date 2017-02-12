@@ -6,7 +6,7 @@ namespace Auctioneer.Infrastructure.Entities
 {
     public class EFDbContext : IdentityDbContext<AuctioneerUser>
     {
-        public EFDbContext() : base() { }
+        public EFDbContext() : base("DefaultConnection", throwIfV1Schema: false) { }
 
         public static EFDbContext Create()
         {

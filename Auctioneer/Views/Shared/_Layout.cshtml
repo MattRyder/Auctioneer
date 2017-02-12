@@ -22,6 +22,10 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("Auctions", "Index", "Auction")</li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("My Profile", "Index", "Account")</li>
+                    }
                 </ul>
             </div>
         </div>

@@ -4,11 +4,12 @@ using Auctioneer.Infrastructure.Entities;
 using Auctioneer.Infrastructure.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Ninject;
+using Ninject.Web.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Vereyon.Web;
@@ -41,9 +42,13 @@ namespace Auctioneer.Infrastructure
         private void RegisterServices()
         {
             // Authentication, User Store bindings
+            kernel.Bind<IUserStore<AuctioneerUser, string>>().To<UserStore<AuctioneerUser>>();
             kernel.Bind<IUserStore<AuctioneerUser>>().To<UserStore<AuctioneerUser>>();
-            kernel.Bind<UserManager<AuctioneerUser, string>>().To<AuctioneerUserManager>();
-            kernel.Bind<IAuthenticationManager>().ToMethod(m => HttpContext.Current.GetOwinContext().Authentication).InTransientScope();
+            kernel.Bind<UserManager<AuctioneerUser, string>>().ToSelf();
+
+
+            kernel.Bind<IAuthenticationManager>().ToMethod(c => HttpContext.Current.GetOwinContext().Authentication).InRequestScope();
+            kernel.Bind<AuctioneerUserManager>().ToMethod(c => HttpContext.Current.GetOwinContext().GetUserManager<AuctioneerUserManager>()).InRequestScope();
 
             // Domain model bindings
             kernel.Bind<IRepo<Auction>>().To<EFAuctionRepo>();

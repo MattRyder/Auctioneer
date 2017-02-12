@@ -13,12 +13,13 @@ using System.Web.Mvc;
 
 namespace Auctioneer.Controllers
 {
-    public class AccountController : Controller
+    [Authorize]
+    public class AccountController : BaseController
     {
         private AuctioneerSignInManager signInManager;
         private AuctioneerUserManager userManager;
 
-        public IAuthenticationManager AuthenticationManager
+        public IAuthenticationManager AuthManager
         {
             get { return HttpContext.GetOwinContext().Authentication; }
         }
@@ -48,7 +49,14 @@ namespace Auctioneer.Controllers
             if (user == null)
                 return HttpNotFound();
 
-            return View(user);
+            AccountIndexViewModel viewModel = new AccountIndexViewModel
+            {
+                Buying = user.Bids.Select(bid => bid.Auction.EndDate > DateTime.Now ? bid.Auction : null).Distinct(),
+                Selling = user.Auctions.Where(auc => auc.EndDate > DateTime.Now),
+                User = user
+            };
+
+            return View(viewModel);
         }
 
         [AllowAnonymous]
@@ -68,6 +76,37 @@ namespace Auctioneer.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new AuctioneerUser { Name = model.Name, UserName = model.Email, Email = model.Email };
+                var registrationResult = await UserManager.CreateAsync(user, model.Password);
+
+                // If user registration hits the DB ok, confirm on the UI:
+                if (registrationResult.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    SetFlashMessage(FlashKeyType.Success, $"Successfully registered, welcome to Auctioneer, {user.Name}!");
+                    return RedirectToAction("Index", "Auction");
+                }
+                else
+                {
+                    SetFlashMessage(FlashKeyType.Danger, "Failed to register your account, please verify the information and try again.");
+                    foreach(string err in registrationResult.Errors)
+                    {
+                        if (err.Split(' ').FirstOrDefault().Equals("Email"))
+                            ModelState.AddModelError("Email", err);
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
             // Request a redirect to the external login provider
@@ -77,7 +116,7 @@ namespace Auctioneer.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            var loginInfo = await AuthManager.GetExternalLoginInfoAsync();
             if (loginInfo == null)
             {
                 return RedirectToAction("Login");
@@ -95,12 +134,47 @@ namespace Auctioneer.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
                 case SignInStatus.Failure:
                 default:
-                    //if (loginInfo.Login.LoginProvider.Equals("twitter"))
-                    //{
-                    //    var twitterResult = await twitterService.GetEmailForUserAsync("", "");
-                    //}
-                    return Redirect(returnUrl);
+                    // If the user does not have an account, then prompt the user to create an account
+                    ViewBag.ReturnUrl = returnUrl;
+                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
             }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                SetFlashMessage(FlashKeyType.Success, "Successfully signed in to Auctioneer, welcome back!");
+                return RedirectToAction("Index", "Auction");
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Get the information about the user from the external login provider
+                var info = await AuthManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    return View("ExternalLoginFailure");
+                }
+                var user = new AuctioneerUser { UserName = model.Email, Email = model.Email };
+                var result = await UserManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    if (result.Succeeded)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        return Redirect(returnUrl);
+                    }
+                }
+            }
+
+            ViewBag.ReturnUrl = returnUrl;
+            return View(model);
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult
