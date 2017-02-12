@@ -376,7 +376,7 @@
     <Content Include="Views\Auction\Details.cshtml" />
     <Content Include="Views\Shared\BidPlacePartial.cshtml" />
     <Content Include="Views\Auction\Edit.cshtml" />
-    <Content Include="Secrets.config" />
+    <None Include="Secrets.config" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Account\ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
