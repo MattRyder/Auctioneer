@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,11 @@ namespace Auctioneer.Core.Entities
         [Required]
         [Display(Name = "Auction End Date")]
         public DateTime EndDate { get; set; }
+
+        [ForeignKey("AuctioneerUser")]
+        public string AuctioneerUser_Id { get; set; }
+
+        public virtual AuctioneerUser AuctioneerUser { get; set; }
 
         public virtual ICollection<Bid> Bids { get; set; }
 

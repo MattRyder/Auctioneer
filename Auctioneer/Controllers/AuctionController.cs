@@ -1,6 +1,7 @@
 ﻿using Auctioneer.Core.Abstract;
 using Auctioneer.Core.Entities;
 using Auctioneer.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,6 +76,7 @@ namespace Auctioneer.Controllers
 
             duration = (duration > 0 || duration <= 7) ? duration : 7;
             auction.EndDate = DateTime.Now.AddDays(duration);
+            auction.AuctioneerUser_Id = User.Identity.GetUserId();
 
             if (ModelState.IsValid)
             {
@@ -148,6 +150,8 @@ namespace Auctioneer.Controllers
                 ModelState.AddModelError("", $"Bid must be more than the reserved price of {auction.MinimumPrice.ToString("c")}");
             else if (bid.Amount <= auction.WinningBid().Amount)
                 ModelState.AddModelError("", $"Bid must be more than the current bid of {auction.WinningBid().Amount.ToString("c")}");
+
+            bid.AuctioneerUser_Id = User.Identity.GetUserId();
 
             if (ModelState.IsValid)
             {

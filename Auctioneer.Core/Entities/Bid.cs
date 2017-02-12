@@ -22,5 +22,10 @@ namespace Auctioneer.Core.Entities
         [Display(Name = "Bid Amount")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:#}")]
         public decimal Amount { get; set; }
+
+        [ForeignKey("AuctioneerUser")]
+        public string AuctioneerUser_Id { get; set; }
+
+        public virtual AuctioneerUser AuctioneerUser { get; set; }
     }
 }
