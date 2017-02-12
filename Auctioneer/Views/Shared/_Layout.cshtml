@@ -25,6 +25,9 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("My Profile", "Index", "Account")</li>
+                    } else
+                    {
+                        <li>@Html.ActionLink("Login", "Login", "Account")</li>
                     }
                 </ul>
             </div>

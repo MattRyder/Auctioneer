@@ -72,7 +72,7 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void Create()
         {
-            Auction newAuction = new Auction() { ID = 7, Title = "New Auction", Subtitle = "New Auction Subtitle", Description = "I will put a description here" };
+            Auction newAuction = new Auction() { ID = 7, Title = "New Auction", Subtitle = "New Auction Subtitle", Description = "I will put a description here", AuctioneerUser_Id = "02dfae6f-102e-4ccb-a50a-0b9f70a1e7fa" };
 
             AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
 

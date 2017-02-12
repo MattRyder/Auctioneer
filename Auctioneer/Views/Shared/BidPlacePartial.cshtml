@@ -6,11 +6,12 @@
   </div>
 </div>
 
-@if (Model.Auction.EndDate >= DateTime.Now)
+@if (Model.Auction.EndDate >= DateTime.Now && User.Identity.IsAuthenticated && Model.Auction.AuctioneerUser_Id != User.Identity.GetUserId())
 {
     using (Html.BeginForm("Bid", "Auction", new { id = Model.Auction.ID }, FormMethod.Post, new { id = "bid-form" }))
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Bid.AuctioneerUser_Id, new { value = User.Identity.GetUserId() })
 
         <div class="row">
           <div class="col-sm-6">

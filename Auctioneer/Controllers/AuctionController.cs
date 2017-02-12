@@ -11,6 +11,7 @@ using Vereyon.Web;
 
 namespace Auctioneer.Controllers
 {
+    [Authorize]
     public class AuctionController : BaseController
     {
         private IRepo<Auction> repo;
@@ -37,11 +38,13 @@ namespace Auctioneer.Controllers
         }
 
         // GET: Auction
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View(repo.Entities);
         }
 
+        [AllowAnonymous]
         public ActionResult Details(int id)
         {
             Auction auction = repo.Find(id);
@@ -52,7 +55,7 @@ namespace Auctioneer.Controllers
             PlaceBidViewModel model = new PlaceBidViewModel()
             {
                 Auction = auction,
-                Bid = new Bid(),
+                Bid = new Bid() { AuctioneerUser_Id = User.Identity.GetUserId() },
                 WinningBid = auction.WinningBid()
             };
 
@@ -63,7 +66,7 @@ namespace Auctioneer.Controllers
         public ActionResult Create()
         {
             ViewBag.DurationSelectList = durationSelectList;
-            return View(new Auction());
+            return View(new Auction() { AuctioneerUser_Id = User.Identity.GetUserId() });
         }
 
         [HttpPost]
@@ -76,7 +79,6 @@ namespace Auctioneer.Controllers
 
             duration = (duration > 0 || duration <= 7) ? duration : 7;
             auction.EndDate = DateTime.Now.AddDays(duration);
-            auction.AuctioneerUser_Id = User.Identity.GetUserId();
 
             if (ModelState.IsValid)
             {
@@ -150,8 +152,6 @@ namespace Auctioneer.Controllers
                 ModelState.AddModelError("", $"Bid must be more than the reserved price of {auction.MinimumPrice.ToString("c")}");
             else if (bid.Amount <= auction.WinningBid().Amount)
                 ModelState.AddModelError("", $"Bid must be more than the current bid of {auction.WinningBid().Amount.ToString("c")}");
-
-            bid.AuctioneerUser_Id = User.Identity.GetUserId();
 
             if (ModelState.IsValid)
             {
