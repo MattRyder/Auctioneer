@@ -16,6 +16,9 @@ namespace Auctioneer.Controllers
     [Authorize]
     public class AccountController : BaseController
     {
+        private static readonly string FlashMessageLoginSuccess = "Successfully logged in, welcome back to Auctioneer.";
+        private static readonly string FlashMessageLoginFailure = "Failed to login, please review your login details and try again.";
+
         private AuctioneerSignInManager signInManager;
         private AuctioneerUserManager userManager;
 
@@ -64,6 +67,32 @@ namespace Auctioneer.Controllers
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> Login(LoginViewModel model)
+        {
+            Func<ViewResult> loginFailureFunc = () =>
+            {
+                SetFlashMessage(FlashKeyType.Danger, FlashMessageLoginFailure);
+                return View();
+            };
+
+            if (!ModelState.IsValid)
+            {
+                return loginFailureFunc();
+            }
+
+            var loginResult = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+            switch (loginResult)
+            {
+                case SignInStatus.Success:
+                    SetFlashMessage(FlashKeyType.Success, FlashMessageLoginSuccess);
+                    return RedirectToAction("Index", "Auction");
+                default:
+                    return loginFailureFunc();
+            }
         }
 
         [AllowAnonymous]

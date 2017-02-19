@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin;
+using Newtonsoft.Json;
 using Owin;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Auctioneer
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuthentication(app);
+            app.MapSignalR();
         }
     }
 }

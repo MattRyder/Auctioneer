@@ -1,7 +1,9 @@
 ﻿using Auctioneer.Core.Abstract;
 using Auctioneer.Core.Entities;
+using Auctioneer.Infrastructure.SignalR;
 using Auctioneer.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ using Vereyon.Web;
 
 namespace Auctioneer.Controllers
 {
-    [Authorize]
+    [System.Web.Mvc.Authorize]
     public class AuctionController : BaseController
     {
         private IRepo<Auction> repo;
@@ -157,6 +159,8 @@ namespace Auctioneer.Controllers
             {
                 auction.Bids.Add(bid);
                 repo.SaveChanges();
+
+                BidHub.PushUpdateBidAmount(id.ToString(), bid.Amount);
             }
 
             PlaceBidViewModel viewModel = new PlaceBidViewModel()

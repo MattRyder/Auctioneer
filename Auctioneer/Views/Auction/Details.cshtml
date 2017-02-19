@@ -54,6 +54,27 @@
   @Scripts.Render("~/bundles/jqueryval")
 }
 
+<script src="~/Scripts/jquery.signalR-2.2.1.js"></script>
+<script src="/signalr/hubs"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var bidHub = $.connection.bidHub;
+
+    bidHub.client.updateBidAmount = function(amount) {
+      $("#bidAmount").text(amount);
+    };
+
+    $.connection.hub.start().done(function() {
+      bidHub.server.registerClient("@Model.Auction.ID")
+    });
+
+    $.connection.hub.stop(function() {
+      bidHub.server.deregisterClient("@Model.Auction.ID");
+    });
+  });
+</script>
+
 <script type="text/javascript">
   var updateTime = function () {
     var endDate = $("#endTime").data("time"),

@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json;
 using Ninject;
 using Ninject.Web.Common;
 using System;
@@ -56,6 +57,11 @@ namespace Auctioneer.Infrastructure
 
             // HTML sanitizer binding
             kernel.Bind<IHtmlSanitizer>().To<AuctioneerHtmlSanitizer>();
+
+            var jsonSerializerSettings = new JsonSerializer();
+            jsonSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+            kernel.Bind<JsonSerializer>().ToMethod(context => jsonSerializerSettings);
         }
     }
 }
