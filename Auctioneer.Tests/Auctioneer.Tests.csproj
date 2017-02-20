@@ -105,7 +105,7 @@
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\AuctionControllerTest.cs" />
     <Compile Include="Controllers\BaseControllerTest.cs" />
-    <Compile Include="Entities\Auction.cs" />
+    <Compile Include="Entities\AuctionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
