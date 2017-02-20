@@ -1,5 +1,6 @@
 ﻿using Auctioneer.Core.Abstract;
 using Auctioneer.Core.Entities;
+using Auctioneer.Infrastructure.Entities;
 using Auctioneer.Infrastructure.SignalR;
 using Auctioneer.Models;
 using Microsoft.AspNet.Identity;
@@ -7,6 +8,7 @@ using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Vereyon.Web;
@@ -18,6 +20,8 @@ namespace Auctioneer.Controllers
     {
         private IRepo<Auction> repo;
         private IHtmlSanitizer sanitizer;
+        private EmailServiceBase emailService;
+        private AuctioneerUserManager userManager;
 
         public static readonly string FlashMessageCreateSuccess = "Successfully listed your item for auction!";
         public static readonly string FlashMessageCreateFailure = "Failed to create your auction, please review the errors below";
@@ -33,10 +37,13 @@ namespace Auctioneer.Controllers
             new SelectListItem() { Text = "Seven Days", Value = "7" }
         }, "Value", "Text");
 
-        public AuctionController(IRepo<Auction> auctionRepo, IHtmlSanitizer htmlSanitizer)
+        public AuctionController(IRepo<Auction> auctionRepo, AuctioneerUserManager userManager, IHtmlSanitizer htmlSanitizer, EmailServiceBase emailService)
         {
             this.repo = auctionRepo;
             this.sanitizer = htmlSanitizer;
+            this.userManager = userManager;
+            this.emailService = emailService;
+
         }
 
         // GET: Auction
@@ -146,7 +153,7 @@ namespace Auctioneer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Bid(int id, Bid bid)
+        public async Task<ActionResult> Bid(int id, Bid bid)
         {
             Auction auction = repo.Find(id);
 
@@ -161,6 +168,9 @@ namespace Auctioneer.Controllers
                 repo.SaveChanges();
 
                 BidHub.PushUpdateBidAmount(id.ToString(), bid.Amount);
+
+                var user = userManager.FindById(bid.AuctioneerUser_Id);
+                await emailService.SendEmailAsync(user.Email, user.Name, "You've placed a Bid on Auctioneer!", $"Foo Bar. You placed a Bid on \"{bid.Auction.Title}\" for {bid.Amount.ToString("c")}");
             }
 
             PlaceBidViewModel viewModel = new PlaceBidViewModel()

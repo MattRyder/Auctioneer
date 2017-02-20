@@ -2,6 +2,7 @@
 using Auctioneer.Core.Entities;
 using Auctioneer.Infrastructure.Entities;
 using Auctioneer.Infrastructure.Repositories;
+using Auctioneer.Infrastructure.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -11,6 +12,7 @@ using Ninject;
 using Ninject.Web.Common;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 using Vereyon.Web;
@@ -62,6 +64,12 @@ namespace Auctioneer.Infrastructure
             jsonSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
             kernel.Bind<JsonSerializer>().ToMethod(context => jsonSerializerSettings);
+
+            kernel.Bind<EmailServiceBase>().ToConstructor(c => new AuctioneerEmailService(
+                ConfigurationManager.AppSettings["SmtpHost"],
+                ConfigurationManager.AppSettings["SmtpPort"],
+                ConfigurationManager.AppSettings["SmtpUser"],
+                ConfigurationManager.AppSettings["SmtpPass"]));
         }
     }
 }

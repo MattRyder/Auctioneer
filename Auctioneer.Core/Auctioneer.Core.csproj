@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstract\IEmailService.cs" />
+    <Compile Include="Abstract\EmailServiceBase.cs" />
     <Compile Include="Abstract\IRepo.cs" />
     <Compile Include="Entities\Auction.cs" />
     <Compile Include="Entities\AuctioneerUser.cs" />

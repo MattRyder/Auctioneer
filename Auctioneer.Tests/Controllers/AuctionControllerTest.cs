@@ -9,6 +9,12 @@ using System.Web.Mvc;
 using System.Linq;
 using Auctioneer.Models;
 using Auctioneer.Infrastructure;
+using System.Threading.Tasks;
+using Auctioneer.Infrastructure.Entities;
+using Microsoft.AspNet.Identity;
+using System.Net.Http;
+using Auctioneer.Infrastructure.Services;
+using System.Configuration;
 
 namespace Auctioneer.Tests.Controllers
 {
@@ -18,12 +24,27 @@ namespace Auctioneer.Tests.Controllers
         private static List<Auction> auctionData;
         private static Mock<IRepo<Auction>> auctionRepo;
         private static AuctioneerHtmlSanitizer sanitizer;
+        private static EmailServiceBase emailService;
+        private AuctioneerUserManager userManager;
 
         [TestInitialize]
         public void TestInitialize()
         {
             // Create html sanitizer for the test suite:
             sanitizer = new AuctioneerHtmlSanitizer();
+
+            // Setup the email service:
+            emailService = new AuctioneerEmailService(
+                ConfigurationManager.AppSettings["SmtpHost"],
+                ConfigurationManager.AppSettings["SmtpPort"],
+                ConfigurationManager.AppSettings["SmtpUser"],
+                ConfigurationManager.AppSettings["SmtpPass"]);
+
+            Mock<IUserStore<AuctioneerUser>> userStore = new Mock<IUserStore<AuctioneerUser>>();
+
+            AuctioneerUser user = new AuctioneerUser() { Email = "testuser@gmail.com", Name = "John Smithy" };
+            userStore.Setup(store => store.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
+            userManager = new AuctioneerUserManager(userStore.Object);
 
             auctionData = new List<Auction>()
             {
@@ -52,7 +73,7 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void Index()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
+            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
             ViewResult result = controller.Index() as ViewResult;
 
@@ -74,7 +95,7 @@ namespace Auctioneer.Tests.Controllers
         {
             Auction newAuction = new Auction() { ID = 7, Title = "New Auction", Subtitle = "New Auction Subtitle", Description = "I will put a description here", AuctioneerUser_Id = "02dfae6f-102e-4ccb-a50a-0b9f70a1e7fa" };
 
-            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
+            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
             ActionResult result = controller.Create(newAuction, 5);
             Auction[] auctionDataArray = auctionData.ToArray();
@@ -102,7 +123,7 @@ namespace Auctioneer.Tests.Controllers
             const string ModifiedTitle = "Auctioneer User Data";
 
             Auction editedAuction = auctionData.First(auc => auc.ID == 1);
-            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
+            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
             // Edit the auction and prep it to go back in
             editedAuction.Title = ModifiedTitle;
@@ -119,7 +140,7 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void Delete()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
+            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
             ActionResult result = controller.Delete(1);
             Assert.IsNotNull(result);
@@ -132,11 +153,11 @@ namespace Auctioneer.Tests.Controllers
         }
 
         [TestMethod]
-        public void PlaceBid_Valid()
+        public async Task PlaceBid_Valid()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
+            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
-            ActionResult result = controller.Bid(1, new Bid() { Amount = 12.51M, Auction_ID = 1 });
+            ActionResult result = await controller.Bid(1, new Bid() { Amount = 12.51M, Auction = auctionData.First() });
             Assert.IsNotNull(result);
 
             PartialViewResult pvResult = result as PartialViewResult;
@@ -154,12 +175,12 @@ namespace Auctioneer.Tests.Controllers
         }
 
         [TestMethod]
-        public void PlaceBid_ValidExtreme()
+        public async Task PlaceBid_ValidExtreme()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
+            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
             // Place a bid for £12,000,00.51, high but valid:
-            ActionResult result = controller.Bid(1, new Bid() { Amount = 12000000.51M, Auction_ID = 1 });
+            ActionResult result = await controller.Bid(1, new Bid() { Amount = 12000000.51M, Auction = auctionData.First() });
             Assert.IsNotNull(result);
 
             PartialViewResult pvResult = result as PartialViewResult;
@@ -177,12 +198,12 @@ namespace Auctioneer.Tests.Controllers
         }
 
         [TestMethod]
-        public void PlaceBid_InvalidUnderReservePrice()
+        public async Task PlaceBid_InvalidUnderReservePrice()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, sanitizer);
+            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
             // Place a bid for £1.21, under the Reserve Price of £12.51
-            ActionResult result = controller.Bid(1, new Bid() { Amount = 1.51M, Auction_ID = 1 });
+            ActionResult result = await controller.Bid(1, new Bid() { Amount = 1.51M, Auction_ID = 1 });
             Assert.IsNotNull(result);
 
             PartialViewResult pvResult = result as PartialViewResult;
