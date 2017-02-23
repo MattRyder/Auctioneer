@@ -61,6 +61,8 @@ body {
   .auction-container h3.description {
     padding-bottom: 5px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+  .auction-container p {
+    word-wrap: break-word; }
 
 /*
  * A light-coloured text style for non-critical hints under elements

@@ -24,8 +24,10 @@ namespace Auctioneer.Tests.Controllers
         private static List<Auction> auctionData;
         private static Mock<IRepo<Auction>> auctionRepo;
         private static AuctioneerHtmlSanitizer sanitizer;
-        private static EmailServiceBase emailService;
+        private static Mock<EmailServiceBase> emailService;
         private AuctioneerUserManager userManager;
+
+        private static AuctionController controller;
 
         [TestInitialize]
         public void TestInitialize()
@@ -34,11 +36,8 @@ namespace Auctioneer.Tests.Controllers
             sanitizer = new AuctioneerHtmlSanitizer();
 
             // Setup the email service:
-            emailService = new AuctioneerEmailService(
-                ConfigurationManager.AppSettings["SmtpHost"],
-                ConfigurationManager.AppSettings["SmtpPort"],
-                ConfigurationManager.AppSettings["SmtpUser"],
-                ConfigurationManager.AppSettings["SmtpPass"]);
+            emailService = new Mock<EmailServiceBase>();
+            emailService.Setup(es => es.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask).Verifiable();
 
             Mock<IUserStore<AuctioneerUser>> userStore = new Mock<IUserStore<AuctioneerUser>>();
 
@@ -68,13 +67,13 @@ namespace Auctioneer.Tests.Controllers
 
             // Mock Delete
             auctionRepo.Setup(repo => repo.Delete(It.IsAny<Auction>())).Callback<Auction>(auction => auctionData.Remove(auction));
+
+            controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService.Object);
         }
 
         [TestMethod]
         public void Index()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
-
             ViewResult result = controller.Index() as ViewResult;
 
             // check the result is usable, first
@@ -94,8 +93,6 @@ namespace Auctioneer.Tests.Controllers
         public void Create()
         {
             Auction newAuction = new Auction() { ID = 7, Title = "New Auction", Subtitle = "New Auction Subtitle", Description = "I will put a description here", AuctioneerUser_Id = "02dfae6f-102e-4ccb-a50a-0b9f70a1e7fa" };
-
-            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
             ActionResult result = controller.Create(newAuction, 5);
             Auction[] auctionDataArray = auctionData.ToArray();
@@ -123,7 +120,6 @@ namespace Auctioneer.Tests.Controllers
             const string ModifiedTitle = "Auctioneer User Data";
 
             Auction editedAuction = auctionData.First(auc => auc.ID == 1);
-            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
 
             // Edit the auction and prep it to go back in
             editedAuction.Title = ModifiedTitle;
@@ -140,8 +136,6 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public void Delete()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
-
             ActionResult result = controller.Delete(1);
             Assert.IsNotNull(result);
 
@@ -155,8 +149,6 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public async Task PlaceBid_Valid()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
-
             ActionResult result = await controller.Bid(1, new Bid() { Amount = 12.51M, Auction = auctionData.First() });
             Assert.IsNotNull(result);
 
@@ -177,8 +169,6 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public async Task PlaceBid_ValidExtreme()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
-
             // Place a bid for £12,000,00.51, high but valid:
             ActionResult result = await controller.Bid(1, new Bid() { Amount = 12000000.51M, Auction = auctionData.First() });
             Assert.IsNotNull(result);
@@ -200,8 +190,6 @@ namespace Auctioneer.Tests.Controllers
         [TestMethod]
         public async Task PlaceBid_InvalidUnderReservePrice()
         {
-            AuctionController controller = new AuctionController(auctionRepo.Object, userManager, sanitizer, emailService);
-
             // Place a bid for £1.21, under the Reserve Price of £12.51
             ActionResult result = await controller.Bid(1, new Bid() { Amount = 1.51M, Auction_ID = 1 });
             Assert.IsNotNull(result);

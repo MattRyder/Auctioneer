@@ -103,6 +103,10 @@ body {
     padding-bottom: 5px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
+
+  p {
+    word-wrap: break-word;
+  }
 }
 
 /*
