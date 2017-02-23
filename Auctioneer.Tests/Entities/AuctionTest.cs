@@ -28,7 +28,7 @@ namespace Auctioneer.Tests.Entities
         [TestMethod]
         public void WinningBid_Single()
         {
-            Bid addedBid = bidData.Find(b => b.ID == 1);
+            Bid addedBid = bidData[0];
             auction.Bids.Add(addedBid);
 
             Bid winningBid = auction.WinningBid();
@@ -40,12 +40,12 @@ namespace Auctioneer.Tests.Entities
         [TestMethod]
         public void WinningBid_Multiple()
         {
-            foreach (Bid bid in bidData.FindAll(b => b.ID < 3))
+            for(int i = 0; i < 2; i++)
             {
-                auction.Bids.Add(bid);
+                auction.Bids.Add(bidData[i]);
             }
 
-            Bid expectedBid = bidData.Find(b => b.ID == 2);
+            Bid expectedBid = bidData[1];
             Assert.IsNotNull(expectedBid);
 
             Bid winningBid = auction.WinningBid();
