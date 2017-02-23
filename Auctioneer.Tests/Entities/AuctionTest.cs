@@ -54,11 +54,11 @@ namespace Auctioneer.Tests.Entities
             Assert.AreEqual(expectedBid.Amount, winningBid.Amount);
         }
 
-        [TestMethod]
         /**
          * For if the bids somehow come through incorrectly, the Winning Bid
          * should always be the highest bid placed so far.
          */
+        [TestMethod]
         public void WinningBid_Incorrectly_Ordered()
         {
             List<Bid> bids = bidData.FindAll(b => b.ID <= 4);
