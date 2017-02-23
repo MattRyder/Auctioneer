@@ -32,7 +32,7 @@ namespace Auctioneer.Tests.Entities
             auction.Bids.Add(addedBid);
 
             Bid winningBid = auction.WinningBid();
-            Assert.IsNotNull(winningBid);
+            //Assert.IsNotNull(winningBid);
 
             Assert.AreEqual(addedBid.Amount, winningBid.Amount);
         }
@@ -49,7 +49,7 @@ namespace Auctioneer.Tests.Entities
             Assert.IsNotNull(expectedBid);
 
             Bid winningBid = auction.WinningBid();
-            Assert.IsNotNull(winningBid);
+            //Assert.IsNotNull(winningBid);
 
             Assert.AreEqual(expectedBid.Amount, winningBid.Amount);
         }
