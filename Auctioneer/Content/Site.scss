@@ -13,17 +13,17 @@ body {
 
 // Site's main navbar
 .navbar-auctioneer {
-  background-color: rgba(#43035A, 0.8);
+  background-color: rgba(#FFF, 0.8);
   padding: 10px 0;
 
   // White links against purple bg
   .nav a, .navbar-brand {
-    color: #FFF;
+    color: #9436bf;
   }
 
   .navbar-brand {
     &:hover {
-      color: #9757AE;
+      color: #43035A;
     }
   }
 

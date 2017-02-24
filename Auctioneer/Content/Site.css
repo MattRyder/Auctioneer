@@ -8,12 +8,12 @@ body {
   flex-direction: column; }
 
 .navbar-auctioneer {
-  background-color: rgba(67, 3, 90, 0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 10px 0; }
   .navbar-auctioneer .nav a, .navbar-auctioneer .navbar-brand {
-    color: #FFF; }
+    color: #9436bf; }
   .navbar-auctioneer .navbar-brand:hover {
-    color: #9757AE; }
+    color: #43035A; }
   .navbar-auctioneer .nav > li {
     margin-top: 10px;
     padding-left: 5px;
