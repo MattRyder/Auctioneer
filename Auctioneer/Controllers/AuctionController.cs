@@ -89,13 +89,16 @@ namespace Auctioneer.Controllers
             duration = (duration > 0 || duration <= 7) ? duration : 7;
             auction.EndDate = DateTime.Now.AddDays(duration);
 
+            if (auction.MinimumPrice == 0)
+                auction.MinimumPrice = 0.01M;
+
             if (ModelState.IsValid)
             {
                 repo.Add(auction);
                 repo.SaveChanges();
 
                 SetFlashMessage(FlashKeyType.Success, FlashMessageCreateSuccess);
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = auction.ID });
             }
 
             SetFlashMessage(FlashKeyType.Danger, FlashMessageCreateFailure);

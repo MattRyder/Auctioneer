@@ -59,11 +59,11 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    Auction.initialize(@Model.Auction.ID);
+    Auction.initialize("@Model.Auction.ID");
     if(@Json.Encode(Model.Auction.IsActive()))
     {
-      updateTime();
-      setInterval(updateTime, 1000);
+      Auction.updateTime();
+      setInterval(Auction.updateTime, 1000);
     }
   });
 </script>

@@ -11,16 +11,18 @@
 
     var bidHub = $.connection.bidHub;
 
-    bidHub.client.updateBidAmount = function(amount) {
+    bidHub.client.updateBidAmount = function (amount) {
+      var $amountField = $("#bidAmount");
+
+      if ($amountField.hasClass("text-success")) {
+        $amountField.removeClass("text-success").addClass("text-animation-outbid");
+      }
+
       $("#bidAmount").text(amount);
     };
 
-    $.connection.hub.start().done(function() {
+    $.connection.hub.start().done(function () {
       bidHub.server.registerClient(auctionId);
-    });
-
-    $.connection.hub.stop(function() {
-      bidHub.server.deregisterClient(auctionId);
     });
   },
 

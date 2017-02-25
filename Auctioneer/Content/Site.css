@@ -92,6 +92,8 @@ body {
   .btn-auctioneer:active, .btn-auctioneer:focus, .btn-auctioneer:hover, .btn-auctioneer:visited {
     color: #FFF;
     outline-color: transparent; }
+  .btn-auctioneer:hover {
+    background-color: #8530ab; }
 
 /*
  * A light-coloured text style for non-critical hints under elements
@@ -105,5 +107,19 @@ body {
 .auc-lock {
   line-height: 1.25em !important;
   color: rgba(2, 95, 22, 0.75); }
+
+.text-animation-outbid {
+  animation: 0.5s linear 0s 2 reverse forwards running outbid-blink, 2s ease-in-out 1s outbid-fade; }
+
+@keyframes outbid-blink {
+  0% {
+    color: #000; }
+  100% {
+    color: #F00; } }
+@keyframes outbid-fade {
+  0% {
+    color: #F00; }
+  100% {
+    color: #000; } }
 
 /*# sourceMappingURL=Site.css.map */

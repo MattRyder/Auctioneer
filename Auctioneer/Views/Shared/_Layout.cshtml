@@ -6,7 +6,7 @@
     <title>@ViewBag.Title - Auctioneer</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
     @Styles.Render("~/bundles/css")
-    @Styles.Render("~/Content/fontawesome")
+    @Styles.Render("~/bundles/fontawesome")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
 </head>
@@ -27,6 +27,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("My Profile", "Index", "Account")</li>
+                        <li>@Html.ActionLink("Sign Out", "SignOut", "Account")</li>
                     } else
                     {
                         <li>@Html.ActionLink("Login", "Login", "Account")</li>

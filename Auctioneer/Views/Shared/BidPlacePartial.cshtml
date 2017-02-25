@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <h3 id="bidAmount" class="@(true ? "text-success" : "")">@Model.WinningBid.Amount.ToString("c")</h3>
+    <h3 id="bidAmount" class="@(Model.WinningBid.AuctioneerUser_Id == User.Identity.GetUserId() ? "text-success" : "")">@Model.WinningBid.Amount.ToString("c")</h3>
   </div>
 </div>
 
@@ -33,6 +33,7 @@
     e.preventDefault();
     $.post("@Url.Action("Bid", "Auction", new { id = Model.Auction.ID })", $(this).serialize(), function (data, _, __) {
       $("#bid-container").html(data);
+      $("input[name='Bid.Amount']").val("");
     })
   });
 </script>

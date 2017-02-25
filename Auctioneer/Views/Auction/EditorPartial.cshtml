@@ -33,27 +33,39 @@
         </div>
       </div>
 
-      <div class="form-group">
-        @Html.LabelFor(model => model.MinimumPrice, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-          @Html.EditorFor(model => model.MinimumPrice, new { htmlAttributes = new { @class = "form-control" } })
-          @Html.DescriptionFor(model => model.MinimumPrice)
-          @Html.ValidationMessageFor(model => model.MinimumPrice, "", new { @class = "text-danger" })
-        </div>
-      </div>
+      @Html.HiddenFor(model => model.MinimumPrice)
+      @Html.HiddenFor(model => model.EndDate)
 
       @if (Model.ID == 0)
       {
+          <div class="form-group">
+            @Html.LabelFor(model => model.MinimumPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+              @Html.EditorFor(model => model.MinimumPrice, new { htmlAttributes = new { @class = "form-control" } })
+              @Html.DescriptionFor(model => model.MinimumPrice)
+              @Html.ValidationMessageFor(model => model.MinimumPrice, "", new { @class = "text-danger" })
+            </div>
+          </div>
+
           <div class="form-group">
             @Html.Label("Duration", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
               @Html.DropDownList("Duration", (SelectList)ViewBag.DurationSelectList, htmlAttributes: new { @class = "form-control" })
             </div>
           </div>
-      } else
+      }
+      else
       {
           <div class="form-group">
-            @Html.Label("End Date", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MinimumPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+              @Html.TextBox("Minimum Price", Model.MinimumPrice, htmlAttributes: new { @readonly = true, @class = "form-control" })
+              <span class="text-hint">The reserve price cannot be changed once the auction is live</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
               @Html.TextBox("End Date", Model.EndDate, htmlAttributes: new { @readonly = true, @class = "form-control" })
               <span class="text-hint">The end date cannot be changed once the auction is live</span>
@@ -63,8 +75,8 @@
 
 
       <div class="form-group">
-        <div class="col-md-10">
-          <input type="submit" value="Create" class="btn btn-default btn-success pull-right" />
+        <div class="col-xs-12">
+          <input type="submit" value="@(Model.ID > 0 ? "Update" : "Create")" class="btn btn-auctioneer pull-right" />
         </div>
       </div>
     </div>

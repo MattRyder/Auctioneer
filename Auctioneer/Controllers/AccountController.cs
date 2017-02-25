@@ -54,7 +54,7 @@ namespace Auctioneer.Controllers
 
             AccountIndexViewModel viewModel = new AccountIndexViewModel
             {
-                Buying = user.Bids.Select(bid => bid.Auction.EndDate > DateTime.Now ? bid.Auction : null).Distinct(),
+                Buying = user.Bids.Where(bid => bid.Auction.IsActive()).Select(bid => bid.Auction).Distinct(),
                 Selling = user.Auctions.Where(auc => auc.EndDate > DateTime.Now),
                 User = user
             };
@@ -204,6 +204,13 @@ namespace Auctioneer.Controllers
 
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
+        }
+
+        public ActionResult SignOut()
+        {
+            AuthManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            SetFlashMessage(FlashKeyType.Info, "You've been logged out successfully, you can now close the window.");
+            return RedirectToAction("Index", "Auction");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult
