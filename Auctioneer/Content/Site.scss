@@ -1,7 +1,13 @@
+// COLORS
+$base-purple: #9436bf;
+$deep-purple: #43035A;
+
 body {
   background-color: #d9d9d9;
   background-image: url("Images/auctioneer-background.png");
   background-repeat: repeat;
+
+  font-family: 'Nunito Sans', sans-serif;
 
   padding-top: 10rem;
 
@@ -13,17 +19,28 @@ body {
 
 // Site's main navbar
 .navbar-auctioneer {
-  background-color: rgba(#FFF, 0.8);
+  background-color: #FFF;
   padding: 10px 0;
 
   // White links against purple bg
   .nav a, .navbar-brand {
-    color: #9436bf;
+    color: $base-purple;
   }
 
-  .navbar-brand {
-    &:hover {
-      color: #43035A;
+  .navbar-brand:hover {
+    color: $deep-purple;
+  }
+
+  button.navbar-toggle {
+    $navbar-button-color: rgba($base-purple, 0.5);
+    border-color: $navbar-button-color;
+
+    &:focus {
+      outline-color: transparent;
+    }
+
+    span {
+      background-color: $navbar-button-color;
     }
   }
 
@@ -41,15 +58,18 @@ body {
 
       font-size: 0.85em;
       text-transform: uppercase;
+      text-align: end;
 
+      
+        &:hover, &:focus {
+          background-color: transparent;
 
-      &:hover, &:focus {
-        background-color: transparent;
-        border-bottom-color:#9757AE;
-        transition: border-bottom-color ease-in-out 0.55s;
-      }
+          @media(min-width: 768px) {
+            border-bottom-color: $base-purple;
+            transition: border-bottom-color ease-in-out 0.55s;
+          }
+       }
     }
-    
   }
 }
 
@@ -78,6 +98,11 @@ body {
   background-color: #FFF;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
   padding-bottom: 30px;
+
+  @media (max-width: 767px) {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
 
   .auction-header {
     padding-bottom: 2em;
@@ -110,6 +135,29 @@ body {
 }
 
 /*
+ * Auctioneer Form Style
+ */
+.form-control {
+  &:focus {
+    border-color: $base-purple;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($base-purple, 0.6);
+  }
+}
+
+// On-brand bootstrap btn variant
+.btn-auctioneer {
+  background-color: $base-purple;
+  border-color: darken($base-purple, 5%);
+  color: #FFF;
+
+  &:active, &:focus, &:hover, &:visited {
+    color: #FFF;
+    outline-color: transparent;
+  }
+  
+}
+
+/*
  * A light-coloured text style for non-critical hints under elements
  */
 .text-hint {
@@ -118,4 +166,9 @@ body {
 
 .auc-inline {
   display: inline-block;
+}
+
+.auc-lock {
+  line-height: 1.25em !important;
+  color: rgba(#025f16, 0.75);
 }

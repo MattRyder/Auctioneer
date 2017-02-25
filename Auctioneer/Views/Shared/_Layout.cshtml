@@ -4,7 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Auctioneer</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
     @Styles.Render("~/bundles/css")
+    @Styles.Render("~/Content/fontawesome")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
 </head>
@@ -44,6 +46,7 @@
       <p>&copy; @DateTime.Now.Year - <a href="//github.com/MattRyder/Auctioneer">Auctioneer</a></p>
     </footer>
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/main")
     @RenderSection("scripts", required: false)
 </body>
 </html>

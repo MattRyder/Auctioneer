@@ -26,6 +26,9 @@ namespace Auctioneer
             bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
                       "~/Scripts/jquery.signalR-{version}.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/main").Include(
+                      "~/Scripts/auction.js"));
+
             bundles.Add(new StyleBundle("~/bundles/css")
                 .Include("~/Content/bootstrap.css")
                 .Include("~/Content/site.css", new CssRewriteUrlTransform()));

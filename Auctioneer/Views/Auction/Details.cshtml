@@ -59,47 +59,11 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    var bidHub = $.connection.bidHub;
-
-    bidHub.client.updateBidAmount = function(amount) {
-      $("#bidAmount").text(amount);
-    };
-
-    $.connection.hub.start().done(function() {
-      bidHub.server.registerClient("@Model.Auction.ID")
-    });
-
-    $.connection.hub.stop(function() {
-      bidHub.server.deregisterClient("@Model.Auction.ID");
-    });
+    Auction.initialize(@Model.Auction.ID);
+    if(@Json.Encode(Model.Auction.IsActive()))
+    {
+      updateTime();
+      setInterval(updateTime, 1000);
+    }
   });
-</script>
-
-<script type="text/javascript">
-  var updateTime = function () {
-    var endDate = $("#endTime").data("time"),
-        timeStr = "",
-        t = Date.parse(endDate) - Date.parse(new Date()),
-        seconds = Math.floor((t / 1000) % 60),
-        minutes = Math.floor((t / 1000 / 60) % 60),
-        hours = Math.floor((t / (1000 * 60 * 60)) % 24),
-        days = Math.floor(t / (1000 * 60 * 60 * 24));
-
-    if (days > 0)
-      timeStr += days + "d ";
-    if (hours > 0)
-      timeStr += hours + "h ";
-    if (minutes > 0)
-      timeStr += minutes + "m ";
-    if (seconds > 0)
-      timeStr += seconds + "s ";
-
-    $("#endTime").text("Ending in: " + timeStr);
-  };
-
-  if(@(Model.Auction.EndDate >= DateTime.Now ? "true" : "false")) {
-    updateTime();
-    setInterval(updateTime, 1000);
-  }
-  
 </script>

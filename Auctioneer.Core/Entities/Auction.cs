@@ -45,5 +45,10 @@ namespace Auctioneer.Core.Entities
             Bid winningBid = (Bids != null) ? Bids.OrderBy(b => b.Amount).LastOrDefault() : null;
             return (winningBid != null) ? winningBid : new Bid() { Amount = MinimumPrice };
         }
+
+        public bool IsActive()
+        {
+            return EndDate > DateTime.Now;
+        }
     }
 }

@@ -15,7 +15,7 @@
       <tr>
         <th>@Html.DisplayNameFor(model => model.Title)</th>
         <th>@Html.DisplayNameFor(model => model.Subtitle)</th>
-        <th></th>
+        <th>@Html.DisplayNameFor(model => model.EndDate)</th>
       </tr>
 
       @foreach (var item in Model)
@@ -23,6 +23,7 @@
           <tr>
             <td>@Html.ActionLink(item.Title, "Details", new { id = item.ID })</td>
             <td>@Html.DisplayFor(modelItem => item.Subtitle)</td>
+            <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
           </tr>
       }
 

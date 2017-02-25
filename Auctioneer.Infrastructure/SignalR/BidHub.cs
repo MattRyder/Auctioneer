@@ -17,7 +17,6 @@ namespace Auctioneer.Infrastructure.SignalR
             return Groups.Add(Context.ConnectionId, auctionId);
         }
 
-
         public static void PushUpdateBidAmount(string auctionId, decimal broadcastAmount)
         {
             hubContext.Clients.Group(auctionId).updateBidAmount(broadcastAmount.ToString("c"));
