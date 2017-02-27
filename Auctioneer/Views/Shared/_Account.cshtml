@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@ViewBag.Title - Auctioneer</title>
+  <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
+  @Styles.Render("~/bundles/css")
+  @Styles.Render("~/bundles/fontawesome")
+  @Scripts.Render("~/bundles/modernizr")
+  @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+  <div class="navbar navbar-fixed-top navbar-auctioneer">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        @Html.ActionLink("Auctioneer", "Index", "Auction", new { area = "" }, new { @class = "navbar-brand" })
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li>@Html.ActionLink("Auctions", "Index", "Auction")</li>
+          @if (User.Identity.IsAuthenticated)
+          {
+              <li>@Html.ActionLink("My Profile", "Index", "Account")</li>
+                        <li>@Html.ActionLink("Sign Out", "SignOut", "Account")</li>
+          }
+          else
+          {
+              <li>@Html.ActionLink("Login", "Login", "Account")</li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="body-auctioneer">
+    <div class="container">
+      
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+          @Html.Partial("Alert")
+          @RenderBody()
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer-auctioneer">
+    <p>&copy; @DateTime.Now.Year - <a href="//github.com/MattRyder/Auctioneer">Auctioneer</a></p>
+  </footer>
+  @Scripts.Render("~/bundles/bootstrap")
+  @Scripts.Render("~/bundles/main")
+  @RenderSection("scripts", required: false)
+</body>
+</html>

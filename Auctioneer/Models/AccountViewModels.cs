@@ -76,4 +76,28 @@ namespace Auctioneer.Models
         public IEnumerable<Auction> Buying { get; set; }
         public IEnumerable<Auction> Selling { get; set; }
     }
+
+    public class ForgotPasswordModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
+
+    public class ResetPasswordViewModel
+    {
+        [Required]
+        public string UserId { get; set; }
+
+        [Required]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [Required]
+        [Display(Name = "Password Confirmation")]
+        public string PasswordConfirmation { get; set; }
+
+        [Required]
+        public string Code { get; set; }
+    }
 }

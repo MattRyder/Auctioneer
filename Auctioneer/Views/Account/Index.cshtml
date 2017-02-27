@@ -29,7 +29,11 @@
             <h1>Selling</h1>
             @Html.Partial("AuctionListPartial", Model.Selling)
           </div>
-          <div role="tabpanel" class="tab-pane" id="edit"><h1>Edit Profile</h1></div>
+          <div role="tabpanel" class="tab-pane" id="edit">
+            <h1>Edit Profile</h1>
+
+            @Html.ActionLink("Change Password", "ForgotPassword")
+          </div>
         </div>
       </div>
     </div>

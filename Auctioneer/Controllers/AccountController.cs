@@ -1,4 +1,5 @@
-﻿using Auctioneer.Core.Entities;
+﻿using Auctioneer.Core.Abstract;
+using Auctioneer.Core.Entities;
 using Auctioneer.Infrastructure.Entities;
 using Auctioneer.Models;
 using Microsoft.AspNet.Identity;
@@ -21,6 +22,7 @@ namespace Auctioneer.Controllers
 
         private AuctioneerSignInManager signInManager;
         private AuctioneerUserManager userManager;
+        private EmailServiceBase emailService;
 
         public IAuthenticationManager AuthManager
         {
@@ -39,10 +41,16 @@ namespace Auctioneer.Controllers
             private set { userManager = value; }
         }
 
-        public AccountController(AuctioneerUserManager userManager, AuctioneerSignInManager signInManager)
+        public EmailServiceBase EmailService {
+            get { return emailService;  }
+            private set { emailService = value; }
+        }
+
+        public AccountController(AuctioneerUserManager userManager, AuctioneerSignInManager signInManager, EmailServiceBase emailService)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            EmailService = emailService;
         }
 
         public async Task<ActionResult> Index()
@@ -140,6 +148,70 @@ namespace Auctioneer.Controllers
         {
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+        }
+
+        [AllowAnonymous]
+        public ActionResult SendPasswordReset()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SendPasswordReset(ForgotPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if(user != null)
+                {
+                    string resetCode = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = resetCode }, Request.Url.Scheme);
+                    await EmailService.SendEmailAsync(user.Email, user.Name, "Reset your Auctioneer Password", $"Reset your Auctioneer password: <a href='{callbackUrl}'>Click here</a><br/>");
+                }
+            }
+
+            SetFlashMessage(FlashKeyType.Success, "We've sent a password reset email to that email, check your mail!");
+            return RedirectToAction("Index", "Auction");
+        }
+
+        [AllowAnonymous]
+        public ActionResult ResetPassword(string userId, string code)
+        {
+            if(User.Identity.IsAuthenticated || code != null)
+            {
+                return View();
+            }
+
+            SetFlashMessage(FlashKeyType.Danger, "Failed to authenticate request, please try again.");
+            return RedirectToAction("Index", "Auction");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await UserManager.FindByIdAsync(model.UserId);
+            if(user == null)
+            {
+                return View(model);
+            }
+
+            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                SetFlashMessage(FlashKeyType.Success, "Successfully reset your password.");
+                return RedirectToAction("Index", "Account");
+            }
+
+            return View();
         }
 
         [AllowAnonymous]

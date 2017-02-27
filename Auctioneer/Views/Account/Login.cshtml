@@ -1,73 +1,66 @@
 ﻿@model Auctioneer.Models.LoginViewModel
 @{
     ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_Account.cshtml";
 }
 
-<div class="row">
-  <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h2>Login</h2>
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h2>Login</h2>
+    </div>
+    <div class="panel-body">
+      <div class="col-sm-12">
+        <section id="loginForm">
+          @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+          {
+              @Html.AntiForgeryToken()
+
+              @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+              <div class="form-group">
+                <div class="col-xs-12">
+                  @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = Html.DisplayName("Email") })
+                  @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-12">
+                  @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = Html.DisplayName("Password") })
+                  @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-12">
+                  <div class="checkbox">
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                    @Html.LabelFor(m => m.RememberMe)
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-12">
+                  <input type="submit" value="Log in" class="btn btn-auctioneer" />
+                </div>
+              </div>
+          }
+        </section>
       </div>
-      <div class="panel-body">
-        <div class="col-sm-12">
-          <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                  <div class="col-xs-12">
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = Html.DisplayName("Email") })
-                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="col-xs-12">
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = Html.DisplayName("Password") })
-                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="col-xs-12">
-                    <div class="checkbox">
-                      @Html.CheckBoxFor(m => m.RememberMe)
-                      @Html.LabelFor(m => m.RememberMe)
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="col-xs-12">
-                    <input type="submit" value="Log in" class="btn btn-auctioneer" />
-                  </div>
-                </div>
-
-                @*<p>
-                    @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                </p>*@
-            }
-          </section>
+      @*<div class="col-sm-4 col-md-4 col-md-offset-2">
+        <section id="socialLoginForm">
+          @Html.Partial("ExternalLoginsListPartial", new Auctioneer.Models.ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+        </section>
+      </div>*@
+    </div>
+    <div class="panel-footer">
+      <div class="row">
+        <div class="col-xs-10">
+          @Html.ActionLink("Register as a new user", "Register", null, new { @class = "btn btn-default" })
+          @Html.ActionLink("Forgot your password?", "ForgotPassword", null, new { @class = "btn btn-default" })
         </div>
-        @*<div class="col-sm-4 col-md-4 col-md-offset-2">
-          <section id="socialLoginForm">
-            @Html.Partial("ExternalLoginsListPartial", new Auctioneer.Models.ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-          </section>
-        </div>*@
-      </div>
-      <div class="panel-footer">
-        <div class="row">
-          <div class="col-xs-10">
-            @Html.ActionLink("Register as a new user", "Register", null, new { @class = "btn btn-default" })
-          </div>
-          <div class="col-xs-2">
-            <div class="fa fa-2x fa-lock pull-right auc-lock"></div>
-          </div>
+        <div class="col-xs-2">
+          <div class="fa fa-2x fa-lock pull-right auc-lock"></div>
         </div>
       </div>
     </div>
-  </div>
-  
 
 </div>
 

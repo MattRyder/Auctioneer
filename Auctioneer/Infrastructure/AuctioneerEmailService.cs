@@ -48,6 +48,7 @@ namespace Auctioneer.Infrastructure.Services
                 message.To.Add(new MailAddress(recipientEmailAddress, recipientEmailDisplayName));
                 message.Subject = emailSubject;
                 message.Body = emailBody;
+                message.IsBodyHtml = true;
 
                 await client.SendMailAsync(message);
             }
